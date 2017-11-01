@@ -1,3 +1,6 @@
+CREATE DATABASE if not exists deployment;
+use deployment;
+
 CREATE TABLE if not exists user_accounts(
 	id int(1) not null auto_increment,
 	first_name varchar(255) not null,
