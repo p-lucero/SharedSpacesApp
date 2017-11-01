@@ -7,9 +7,10 @@ var express = require('express'),
 
 
 var con = mysql.createConnection({
-	host: 'localhost'
-	user: 'root'
-	database: 'SharedSpacesDB' // FIXME
+	host: 'localhost',
+	user: 'root',
+	database: 'deployment',
+	insecureAuth: true
 });
 
 con.connect(function(err){
