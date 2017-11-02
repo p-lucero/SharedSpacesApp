@@ -6,7 +6,7 @@ var express = require('express'),
   bodyParser = require('body-parser');
 
 
-var con = mysql.createConnection({
+global.con = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
 	database: 'deployment',

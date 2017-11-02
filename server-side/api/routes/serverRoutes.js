@@ -2,6 +2,9 @@
 module.exports = function(app) {
 	var controller = require('../controllers/serverController.js');
 
+	app.route('/creategroup')
+		.get(controller.creategroup)
+
 	// Enumerate all of the routes that should be taken by different requests.
 	// The general form is:
 	/*

@@ -2,6 +2,17 @@
 
 var mysql = require('mysql');
 
+exports.creategroup = function(request, result){
+	// parse request into valid SQL query or something
+	// authenticate that the user sending the request can make the request
+	global.con.query(request, function(err, task) {
+		if (err)
+			result.send(err);
+		else
+			result.json(task);
+	});
+};
+
 // Each of the required functions that should be achieved by the server should be implemented as a function with the form
 /*
 	exports.FUNCTIONNAME = function(request, result) {
