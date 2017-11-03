@@ -3,5 +3,5 @@
 cd /srv/SharedSpacesDeployment/github-building/react-web
 git pull
 npm run build
-rm -rf /srv/SharedSpacesDeployment/build
+rm -rf /srv/SharedSpacesDeployment/client
 cp -r /srv/SharedSpacesDeployment/github-building/react-web/build /srv/SharedSpacesDeployment/client
