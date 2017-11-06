@@ -2,7 +2,7 @@
 
 var mysql = require('mysql');
 
-exports.creategroup = function(request, result){
+exports.group_info = function(request, result){
 	// parse request into valid SQL query
 	// the real meat of the request (the information that we would parse) is contained in request['body']
 	// this IS ITSELF basically a dictionary and contains whatever parameters have been set by the sender
