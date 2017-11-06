@@ -7,8 +7,8 @@ exports.creategroup = function(request, result){
 	// the real meat of the request (the information that we would parse) is contained in request['body']
 	// this IS ITSELF basically a dictionary and contains whatever parameters have been set by the sender
 	// authenticate that the user sending the request can make the request
-	parsed_request = "use deployment;"; // Dummy request for now; this should be whatever we get out of the parsing code to be written above!
-	authenticated = true; // Dummy boolean for now; this should be whatever the above authentication code returned
+	var parsed_request = "use deployment;"; // Dummy request for now; this should be whatever we get out of the parsing code to be written above!
+	var authenticated = true; // Dummy boolean for now; this should be whatever the above authentication code returned
 	if (authenticated) {
 		global.con.query(parsed_request, function(err, task) {
 			if (err) {
