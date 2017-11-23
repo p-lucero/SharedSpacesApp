@@ -4,6 +4,7 @@ module.exports = function(app) {
 	var putController = require('../controllers/putController.js');
 	var postController = require('../controllers/postController.js');
 	var deleteController = require('../controllers/deleteController.js');
+	var authenticationController = require('../controllers/authenticationController.js')
 
 	app.route('/api/groups') // deals with all groups or groups in the making
 		.post(postController.create_new_group)
@@ -20,6 +21,12 @@ module.exports = function(app) {
 		.get(getController.get_user_info)
 		.put(putController.update_user_info)
 		.delete(deleteController.delete_user)
+
+	app.route('/api/users/login')
+		.post(authenticationController.login)
+
+	app.route('/api/users/logout')
+		.post(authenticationController.logout)
 
 	app.route('/api/groupDebts/:groupId')
 		.get(getController.get_group_debt_list)
