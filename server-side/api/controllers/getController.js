@@ -2,6 +2,11 @@
 
 var mysql = require('mysql');
 
+exports.dummy_function = function(request, result) {
+	// verifies something or returns something or something as is needed for testing purposes
+	// don't actually bother fleshing this out to do anything meaningful
+}
+
 /*
 	exports.FUNCTIONNAME = function(request, result) {
 		// Parse the request into a valid SQL query with some common parser code from models

@@ -6,6 +6,9 @@ module.exports = function(app) {
 	var deleteController = require('../controllers/deleteController.js');
 	var authenticationController = require('../controllers/authenticationController.js')
 
+	app.route('/api/dummy') // THIS IS A DUMMY ENDPOINT FOR TESTING PURPOSES ONLY. **DO NOT USE ME IN PRODUCTION CODE**
+		.get(getController.dummy_function)
+
 	app.route('/api/groups') // deals with all groups or groups in the making
 		.post(postController.create_new_group)
 /*
