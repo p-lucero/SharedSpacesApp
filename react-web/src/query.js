@@ -59,7 +59,7 @@ const rent = 'rent';
 function request(where, type, ...args){
 	args = args[0];								//Initialize the arguments variable
 	ending = ParseArgs(where, type, args);		//Creates an ending object that contains the url suffix and the additional arguments object that is passed to the server
-												//	Additional arguments (addArgs) is from an object that is passed with the relavent information, the parsedArgs 
+												//	Additional arguments (addArgs) is from an object that is passed with the relavent information, the passedrsedArgs 
 												//	function will ensure that all of the relavent information is there and will alert if all of it is not there 
 	addArgs = ending.addArgs;					//The object argument in request does not allow dot notation so it requires its own object
 
@@ -67,10 +67,10 @@ function request(where, type, ...args){
 	//With the parsed information it will return an object with the relavent information that should be within the response object 
 	//but right now it simply prints the result
 	//	Deffinitions: suffix is in the url (ie. 'groups/:groupID') and the addArgs is an object that is passed
-	req({method: type, uri: 'http://18.216.3.210/api/' + where + '/' + ending.suffix, addArgs}, (error, response, body) => {
+	req({method: type, uri: 'http://18.216.3.210/api/' + where + '/' + ending.suffix, json : addArgs}, (error, response, body) => {
 		if(error) {return console.log(error);}
 		console.log('post ' + where +  ' status is: ' + response.statusCode);
-		console.log('post ' + where + ' body returned: ' + body);
+		console.log('post ' + where + ' body returned: ' + JSON.stringify(body));
 	});
 }
 
