@@ -8,7 +8,7 @@ function ensure_login() {
 
 function ensure_attributes(body, desiredAttributes) {
 	for (attribute of desiredAttributes){
-		if (typeof attribute === "undefined"){
+		if (typeof body[attribute] === "undefined"){
 			return false;
 		}
 	}
@@ -34,7 +34,17 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 				body[param] = request.params[param]
 			}
 			for (ph of placeholders) {
-				skeleton = skeleton.replace(ph, body[ph])
+				let replacement = ""
+				if (typeof(body[ph]) === "undefined"){
+					replacement = "null" // deal with any optional parameters that aren't present
+				}
+				else if (isNaN(body[ph])){
+					replacement = "'" + body[ph] + "'" // non-numerical values should be in single quotes
+				}
+				else {
+					replacement = body[ph] // numerical values should be just numeric, no quotes
+				}
+				skeleton = skeleton.replace(ph, replacement)
 			}
 			global.pool.query(skeleton, function(err, task) {
 				if (err) {
