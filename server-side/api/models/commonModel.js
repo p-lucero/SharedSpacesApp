@@ -46,14 +46,20 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 				}
 				skeleton = skeleton.replace(ph, replacement)
 			}
-			global.pool.query(skeleton, function(err, task) {
-				if (err) {
-					result.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
-				}
-				else {
-					result.json(task); // Return the results of the SQL query to the client to be interpreted and pretty-printed by the React UI
-				}
-			});
+			if skeleton.includes("INSERT") {
+				global.pool.query(skeleton) // no callback, MAY BREAK EVERYTHING
+				return; // yield control back to the caller so that it may perform an additional query to get the ID etc.
+			}
+			else {
+				global.pool.query(skeleton, function(err, task) {
+					if (err) {
+						result.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
+					}
+					else {
+						result.json(task); // Return the results of the SQL query to the client to be interpreted and pretty-printed by the React UI
+					}
+				});
+			}
 		}
 	}
 }
