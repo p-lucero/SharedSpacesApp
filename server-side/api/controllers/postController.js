@@ -23,6 +23,7 @@ exports.create_new_group = function(request, result){
 
 exports.create_new_user = function(request, result) {
 	attributes = [] // an array of strings containing all required attributes in the user's request
+	placeholders = [] // an array of strings containing all things to replace in skeleton(s); subset of attributes
 	skeleton = "" // the basic skeleton of a SQL query for this function
 	body = common.ensure_attributes(request.body, attributes)
 	if (!body) {
@@ -32,12 +33,13 @@ exports.create_new_user = function(request, result) {
 		commonAuth = common.ensure_login() // FIXME
 		specificAuth = true // FIXME, more specific authentication code should go here
 		authenticated = commonAuth && specificAuth
-		common.perform_query(authenticated, skeleton, body, attributes, result)
+		common.perform_query(authenticated, skeleton, body, placeholders, result)
 	}
 };
 
 exports.create_group_debt = function(request, result) {
 	attributes = [] // an array of strings containing all required attributes in the user's request
+	placeholders = [] // an array of strings containing all things to replace in skeleton(s); subset of attributes
 	skeleton = "" // the basic skeleton of a SQL query for this function
 	body = common.ensure_attributes(request.body, attributes)
 	if (!body) {
@@ -47,12 +49,13 @@ exports.create_group_debt = function(request, result) {
 		commonAuth = common.ensure_login() // FIXME
 		specificAuth = true // FIXME, more specific authentication code should go here
 		authenticated = commonAuth && specificAuth
-		common.perform_query(authenticated, skeleton, body, attributes, result)
+		common.perform_query(authenticated, skeleton, body, placeholders, result)
 	}
 };
 
 exports.create_new_personal_debt = function(request, result) {
 	attributes = [] // an array of strings containing all required attributes in the user's request
+	placeholders = [] // an array of strings containing all things to replace in skeleton(s); subset of attributes
 	skeleton = "" // the basic skeleton of a SQL query for this function
 	body = common.ensure_attributes(request.body, attributes)
 	if (!body) {
@@ -62,12 +65,13 @@ exports.create_new_personal_debt = function(request, result) {
 		commonAuth = common.ensure_login() // FIXME
 		specificAuth = true // FIXME, more specific authentication code should go here
 		authenticated = commonAuth && specificAuth
-		common.perform_query(authenticated, skeleton, body, attributes, result)
+		common.perform_query(authenticated, skeleton, body, placeholders, result)
 	}
 };
 
 exports.create_new_grocery_item = function(request, result) {
 	attributes = [] // an array of strings containing all required attributes in the user's request
+	placeholders = [] // an array of strings containing all things to replace in skeleton(s); subset of attributes
 	skeleton = "" // the basic skeleton of a SQL query for this function
 	body = common.ensure_attributes(request.body, attributes)
 	if (!body) {
@@ -77,12 +81,13 @@ exports.create_new_grocery_item = function(request, result) {
 		commonAuth = common.ensure_login() // FIXME
 		specificAuth = true // FIXME, more specific authentication code should go here
 		authenticated = commonAuth && specificAuth
-		common.perform_query(authenticated, skeleton, body, attributes, result)
+		common.perform_query(authenticated, skeleton, body, placeholders, result)
 	}
 };
 
 exports.create_new_chore = function(request, result) {
 	attributes = [] // an array of strings containing all required attributes in the user's request
+	placeholders = [] // an array of strings containing all things to replace in skeleton(s); subset of attributes
 	skeleton = "" // the basic skeleton of a SQL query for this function
 	body = common.ensure_attributes(request.body, attributes)
 	if (!body) {
@@ -92,12 +97,13 @@ exports.create_new_chore = function(request, result) {
 		commonAuth = common.ensure_login() // FIXME
 		specificAuth = true // FIXME, more specific authentication code should go here
 		authenticated = commonAuth && specificAuth
-		common.perform_query(authenticated, skeleton, body, attributes, result)
+		common.perform_query(authenticated, skeleton, body, placeholders, result)
 	}
 };
 
 exports.create_new_rent_item = function(request, result) {
 	attributes = [] // an array of strings containing all required attributes in the user's request
+	placeholders = [] // an array of strings containing all things to replace in skeleton(s); subset of attributes
 	skeleton = "" // the basic skeleton of a SQL query for this function
 	body = common.ensure_attributes(request.body, attributes)
 	if (!body) {
@@ -107,6 +113,6 @@ exports.create_new_rent_item = function(request, result) {
 		commonAuth = common.ensure_login() // FIXME
 		specificAuth = true // FIXME, more specific authentication code should go here
 		authenticated = commonAuth && specificAuth
-		common.perform_query(authenticated, skeleton, body, attributes, result)
+		common.perform_query(authenticated, skeleton, body, placeholders, result)
 	}
 };
