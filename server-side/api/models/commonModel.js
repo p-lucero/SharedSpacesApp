@@ -27,8 +27,8 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 			result.status(400).send({url: request.originalUrl + " received a badly formatted request"})
 		}
 		else {
-			for (param of request.params) {
-				// transfer all thingies FIXME
+			for (param in request.params) {
+				body[param] = request.params[param]
 			}
 			for (ph of placeholders) {
 				skeleton = skeleton.replace(ph, body[ph])
