@@ -23,11 +23,13 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 	authenticated = commonAuth && specificAuth
 	if (!authenticated){
 		result.status(403).send({url: request.originalUrl + " forbidden"})
+		return true;
 	}
 	else {
 		body = ensure_attributes(request.body, attributes)
 		if (!body){
 			result.status(400).send({url: request.originalUrl + " received a badly formatted request"})
+			return true;
 		}
 		else {
 			for (param in request.params) {
@@ -48,15 +50,17 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 			}
 			if skeleton.includes("INSERT") {
 				global.pool.query(skeleton) // no callback, MAY BREAK EVERYTHING
-				return; // yield control back to the caller so that it may perform an additional query to get the ID etc.
+				return false; // yield control back to the caller so that it may perform an additional query to get the ID etc.
 			}
 			else {
 				global.pool.query(skeleton, function(err, task) {
 					if (err) {
 						result.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
+						return true;
 					}
 					else {
 						result.json(task); // Return the results of the SQL query to the client to be interpreted and pretty-printed by the React UI
+						return true;
 					}
 				});
 			}
