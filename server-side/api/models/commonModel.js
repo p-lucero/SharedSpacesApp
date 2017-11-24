@@ -17,6 +17,9 @@ function ensure_attributes(body, desiredAttributes) {
 
 exports.perform_query = function(attributes, placeholders, skeleton, specificAuth, request, result) {
 	commonAuth = ensure_login()
+	if (skeleton.includes("INSERT INTO user_accounts")) {
+		commonAuth = true // hack to ensure that a user account can always be created
+	}
 	authenticated = commonAuth && specificAuth
 	if (!authenticated){
 		result.status(403).send({url: request.originalUrl + " forbidden"})
