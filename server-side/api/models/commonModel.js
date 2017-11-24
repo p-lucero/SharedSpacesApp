@@ -9,7 +9,7 @@ exports.ensure_login = function() {
 exports.ensure_attributes = function(body, desiredAttributes) {
 	for (attribute of desiredAttributes){
 		if (typeof attribute === "undefined"){
-			return null;
+			return false;
 		}
 	}
 	return body;
