@@ -11,7 +11,7 @@ module.exports = function(app) {
 
 	app.route('/api/groups') // deals with all groups or groups in the making
 		.post(postController.create_new_group)
-/*
+
 	app.route('/api/groups/:groupId')
 		.get(getController.get_group_info)
 		.put(putController.update_group_info)
@@ -77,7 +77,6 @@ module.exports = function(app) {
 		.get(getController.get_rent_info)
 		.put(putController.update_rent_info)
 		.post(postController.create_new_rent_item)
-*/
 
 	// Enumerate all of the routes that should be taken by different requests.
 	// The general form is:
