@@ -3,6 +3,16 @@
 var mysql = require('mysql');
 var common = require('../models/commonModel.js');
 
+// async boilerplate
+// function foo(data, err, task, request, response){
+// 	if (err){
+// 		response.send(err);
+// 	}
+// 	else {
+// 		common.perform_query(attributes, placeholders, skeleton, true, data, callback, request, response)
+// 	}
+// }
+
 exports.update_group_info = function(request, response) {
 	attributes = []
 	placeholders = []

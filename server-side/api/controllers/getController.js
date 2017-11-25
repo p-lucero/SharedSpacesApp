@@ -3,17 +3,28 @@
 var mysql = require('mysql');
 var common = require('../models/commonModel.js');
 
+// async boilerplate
+// function foo(data, err, task, request, response){
+// 	if (err){
+// 		response.send(err);
+// 	}
+// 	else {
+// 		common.perform_query(attributes, placeholders, skeleton, true, data, callback, request, response)
+// 	}
+// }
+
 exports.dummy_function = function(request, response) {
 	// verifies something or returns something or something as is needed for testing purposes
 	// don't actually bother fleshing this out to do anything meaningful
+	// you can access this by going to /api/dummy
 }
 
 exports.get_group_info = function(request, response) {
 	attributes = []
-	placeholders = [new RegExp("GroupID"), "g"] // creates a regexp that replaces all instances of "GroupID" when calling .replace()
-	skeleton = "(SELECT group_name, id FROM groups WHERE id=GroupID) (SELECT * FROM user_accounts WHERE group_id=GroupID) (SELECT * FROM group_debts WHERE group_id=GroupID" // ugly ass mysql
+	placeholders = []
+	skeleton = "(SELECT group_name, id FROM groups WHERE id=groupId) (SELECT * FROM user_accounts WHERE group_id=groupId) (SELECT * FROM group_debts WHERE group_id=groupId" // ugly ass mysql
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, {}, null, request, response)
 };
 
 exports.get_user_info = function(request, response) {
