@@ -15,7 +15,7 @@ function ensure_attributes(body, desiredAttributes) {
 	return body;
 }
 
-exports.perform_query = function(attributes, placeholders, skeleton, specificAuth, request, result) {
+exports.perform_query = function(attributes, placeholders, skeleton, specificAuth, data, callback, request, result) {
 	commonAuth = ensure_login()
 	if (skeleton.includes("INSERT INTO user_accounts")) {
 		commonAuth = true // hack to ensure that a user account can always be created
@@ -32,10 +32,10 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 			return true;
 		}
 		else {
-			for (param in request.params) {
+			for (param in request.params) { // move anything that was specified in the URL to the request body
 				body[param] = request.params[param]
 			}
-			for (ph of placeholders) {
+			for (ph of placeholders) { // perform parameter substitution in the query skeleton
 				let replacement = ""
 				if (typeof(body[ph]) === "undefined"){
 					replacement = "null" // deal with any optional parameters that aren't present
@@ -48,22 +48,32 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 				}
 				skeleton = skeleton.replace(ph, replacement)
 			}
-			if skeleton.includes("INSERT") {
-				global.pool.query(skeleton) // no callback, MAY BREAK EVERYTHING
-				return false; // yield control back to the caller so that it may perform an additional query to get the ID etc.
+			if (callback !== null) { // there are more queries required and this is only one of several
+				global.pool.query(skeleton, function(err, task) {
+					if (err){
+						callback(data, err, null, request, result); // which produces absolutely disgusting code
+					}
+					else {
+						callback(data, null, task, request, result);
+					}
+				});
 			}
 			else {
 				global.pool.query(skeleton, function(err, task) {
 					if (err) {
 						result.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
-						return true;
 					}
 					else {
 						result.json(task); // Return the results of the SQL query to the client to be interpreted and pretty-printed by the React UI
-						return true;
 					}
 				});
 			}
 		}
 	}
 }
+
+/*
+function foo(data, err, task, request, result) {
+	// async code goes here
+}
+*/
