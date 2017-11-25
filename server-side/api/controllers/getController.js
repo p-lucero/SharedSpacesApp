@@ -13,7 +13,7 @@ exports.get_group_info = function(request, response) {
 	placeholders = [new RegExp("GroupID"), "g"] // creates a regexp that replaces all instances of "GroupID" when calling .replace()
 	skeleton = "(SELECT group_name, id FROM groups WHERE id=GroupID) (SELECT * FROM user_accounts WHERE group_id=GroupID) (SELECT * FROM group_debts WHERE group_id=GroupID" // ugly ass mysql
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_user_info = function(request, response) {
@@ -21,7 +21,7 @@ exports.get_user_info = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_group_debt_list = function(request, response) {
@@ -29,7 +29,7 @@ exports.get_group_debt_list = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_group_debt_info = function(request, response) {
@@ -37,7 +37,7 @@ exports.get_group_debt_info = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.list_personal_debts = function(request, response) {
@@ -45,7 +45,7 @@ exports.list_personal_debts = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_personal_debt_info = function(request, response) {
@@ -53,7 +53,7 @@ exports.get_personal_debt_info = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_grocery_list = function(request, response) {
@@ -61,7 +61,7 @@ exports.get_grocery_list = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_grocery_item = function(request, response) {
@@ -69,7 +69,7 @@ exports.get_grocery_item = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_chores_list = function(request, response) {
@@ -77,7 +77,7 @@ exports.get_chores_list = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_chore_info = function(request, response) {
@@ -85,7 +85,7 @@ exports.get_chore_info = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_rent_info = function(request, response) {
@@ -93,7 +93,7 @@ exports.get_rent_info = function(request, response) {
 	placeholders = []
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 /*
