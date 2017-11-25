@@ -19,90 +19,124 @@ exports.dummy_function = function(request, response) {
 	// you can access this by going to /api/dummy
 }
 
+function group_info_helper3(data, err, task, request, response) {
+	if (err){
+		response.send(err);
+	}
+	else {
+		data.debts = task
+		response.json(data);
+	}
+}
+
+function group_info_helper2(data, err, task, request, response) {
+	if (err){
+		response.send(err);
+	}
+	else {
+		data.users = task
+		skeleton = "SELECT * FROM group_debts WHERE group_id=groupId"
+		common.perform_query([], ["groupId"], skeleton, true, data, group_info_helper3, request, response)
+	}
+}
+
+function group_info_helper1(data, err, task, request, response) {
+	if (err){
+		response.send(err);
+	}
+	else {
+		data.group_info = task
+		skeleton = "SELECT * FROM user_accounts WHERE group_id=groupId"
+		common.perform_query([], ["groupId"], skeleton, true, data, group_info_helper2, request, response)
+	}
+}
+
 exports.get_group_info = function(request, response) {
-	attributes = []
-	placeholders = []
-	skeleton = "(SELECT group_name, id FROM groups WHERE id=groupId) (SELECT * FROM user_accounts WHERE group_id=groupId) (SELECT * FROM group_debts WHERE group_id=groupId" // ugly ass mysql
+	attributes = [] // this query has to progress in stages because there's no good way of meaningfully joining these tables
+	placeholders = ["groupId"]
+	skeleton = "SELECT group_name, id FROM groups WHERE id=groupId"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, {}, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, {}, group_info_helper1, request, response)
 };
+
+
 
 exports.get_user_info = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["userId"]
+	skeleton = "SELECT * FROM user_accounts WHERE id=userId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_group_debt_list = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["groupId"]
+	skeleton = "SELECT * FROM group_debt WHERE group_id=groupId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_group_debt_info = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["debtId"]
+	skeleton = "SELECT * FROM group_debt WHERE id=debtId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.list_personal_debts = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = [new RegExp("userId", "g")]
+	skeleton = "SELECT * FROM personal_debts WHERE lender_id=userId OR borrower_id=userId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_personal_debt_info = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["debtId"]
+	skeleton = "SELECT * FROM personal_debts WHERE id=debtId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_grocery_list = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["groupId"]
+	skeleton = "SELECT * FROM groceries WHERE group_id=groupId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_grocery_item = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["groceryId"]
+	skeleton = "SELECT * FROM groceries WHERE id=groceryId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_chores_list = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["groupId"]
+	skeleton = "SELECT * FROM chores WHERE group_id=groupId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_chore_info = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["choreId"]
+	skeleton = "SELECT * FROM chores WHERE chore_id=choreId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.get_rent_info = function(request, response) {
 	attributes = []
-	placeholders = []
-	skeleton = ""
+	placeholders = ["groupId"]
+	skeleton = "SELECT * FROM rent WHERE group_id=groupId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
