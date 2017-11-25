@@ -15,20 +15,33 @@ function ensure_attributes(body, desiredAttributes) {
 	return body;
 }
 
-exports.perform_query = function(attributes, placeholders, skeleton, specificAuth, data, callback, request, result) {
+/*
+Parameters are as follows:
+
+	attributes is the array of strings containing all required attributes that the request body should have.
+	placeholders is the array of strings (or regexps) which will be used in doing parameter substitution later on.
+	skeleton is the query skeleton to be used in parameter substitution later.
+	specificAuth is a boolean value indicating whether the authentication checks in the caller passed.
+	data is an object containing any data from prior queries, if applicable. Optional, should be null if the operation can be done in one query.
+	callback is a callback function which will be called if it exists. Used for when multiple queries are needed. Optional, should be null in same case as above.
+	request is the built-in request object that the user sent us.
+	response is the object which deals with how we're going to reply to the user.
+*/
+
+exports.perform_query = function(attributes, placeholders, skeleton, specificAuth, data, callback, request, response) {
 	commonAuth = ensure_login()
 	if (skeleton.includes("INSERT INTO user_accounts")) {
 		commonAuth = true // hack to ensure that a user account can always be created
 	}
 	authenticated = commonAuth && specificAuth
 	if (!authenticated){
-		result.status(403).send({url: request.originalUrl + " forbidden"})
+		response.status(403).send({url: request.originalUrl + " forbidden"})
 		return true;
 	}
 	else {
 		body = ensure_attributes(request.body, attributes)
 		if (!body){
-			result.status(400).send({url: request.originalUrl + " received a badly formatted request"})
+			response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
 			return true;
 		}
 		else {
@@ -51,20 +64,20 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 			if (callback !== null) { // there are more queries required and this is only one of several
 				global.pool.query(skeleton, function(err, task) {
 					if (err){
-						callback(data, err, null, request, result); // which produces absolutely disgusting code
+						callback(data, err, null, request, response); // which produces absolutely disgusting code
 					}
 					else {
-						callback(data, null, task, request, result);
+						callback(data, null, task, request, response);
 					}
 				});
 			}
 			else {
 				global.pool.query(skeleton, function(err, task) {
 					if (err) {
-						result.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
+						response.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
 					}
 					else {
-						result.json(task); // Return the results of the SQL query to the client to be interpreted and pretty-printed by the React UI
+						response.json(task); // Return the responses of the SQL query to the client to be interpreted and pretty-printed by the React UI
 					}
 				});
 			}
@@ -73,7 +86,7 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 }
 
 /*
-function foo(data, err, task, request, result) {
+function foo(data, err, task, request, response) {
 	// async code goes here
 }
 */
