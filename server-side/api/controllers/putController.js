@@ -93,23 +93,7 @@ exports.update_personal_debt = function(request, response) {
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
 };
 
-exports.update_grocery_list = function(request, response) {
-	attributes = ["amount", "paid", "userID"]
-	placeholders = ["amount", "paid", "userID", "groupId", "groceryId"]
-	skeleton = "UPDATE groceries SET amount_due=amount, paid_status=paid, user_id=userID, group_id=groupId WHERE id=groceryId"
-	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
-};
-
 exports.update_grocery_item = function(request, response) {
-	attributes = []
-	placeholders = []
-	skeleton = ""
-	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
-};
-
-exports.update_chores_list = function(request, response) {
 	attributes = []
 	placeholders = []
 	skeleton = ""

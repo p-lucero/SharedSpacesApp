@@ -53,7 +53,6 @@ module.exports = function(app) {
 
 	app.route('/api/groceries/:groupId')
 		.get(getController.get_grocery_list)
-		.put(putController.update_grocery_list)
 		.post(postController.create_new_grocery_item)
 		.delete(deleteController.delete_grocery_list)
 
@@ -64,7 +63,6 @@ module.exports = function(app) {
 
 	app.route('/api/chores/:groupId')
 		.get(getController.get_chores_list)
-		.put(putController.update_chores_list)
 		.post(postController.create_new_chore)
 		.delete(deleteController.delete_chores_list)
 
