@@ -30,13 +30,17 @@ function create_user_helper(data, err, task, request, response){
 }
 
 exports.create_new_user = function(request, response) {
-	attributes = ["first", "last", "_email", "pw", "phoneNumber"]
-	placeholders = ["first", "last", "_email", "pw", "phoneNumber", "facebook", "twitter", "insta", "groupID"]
+	attributes = ["_first", "_last", "_email", "pw", "phoneNumber"]
+	placeholders = ["_first", "_last", "_email", "pw", "phoneNumber", "_facebook", "_twitter", "_insta", "groupID"]
 	skeleton = "INSERT INTO user_accounts (first_name, last_name, email, password, phone_number, facebook_profile, twitter_handle, instagram, group_id)\
-	VALUES (first, last, _email, pw, phoneNumber, facebook, twitter, insta, groupID);"
+	VALUES (_first, _last, _email, pw, phoneNumber, _facebook, _twitter, _insta, groupID);"
 	request.body._email = request.body.email // deal with name shadowing
 	request.body.pw = request.body.password
-	request.body.insta = request.body.instagram
+	request.body._insta = request.body.instagram
+	request.body._facebook = request.body.facebook
+	request.body._twitter = request.body.twitter
+	request.body._first = request.body.first
+	request.body._last = request.body.last
 	specificAuth = true // this doesn't need to be fixed; anyone should be able to create user accounts without any specific authentication
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, create_user_helper, request, response)
 };
