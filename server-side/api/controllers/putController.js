@@ -94,25 +94,26 @@ exports.update_personal_debt = function(request, response) {
 };
 
 exports.update_grocery_item = function(request, response) {
-	attributes = []
-	placeholders = []
-	skeleton = ""
+	attributes = ["amount", "paid", "userID"]
+	placeholders = ["amount", "paid", "userID", "groupId", "groceryId"]
+	skeleton = "UPDATE groceries SET amount_due=amount, paid_status=paid, user_id=userID, group_id=groupId WHERE id=groceryId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
 };
 
 exports.update_chore_item = function(request, response) {
-	attributes = []
-	placeholders = []
-	skeleton = ""
+	attributes = ["_chore", "duedate", "complete", "userID"]
+	placeholders = ["_chore", "duedate", "complete", "userID", "groupId", "choreId"]
+	request.body._chore = request.body.chore
+	skeleton = "UPDATE chores SET chore=_chore, due_date=duedate, chore_complete=complete, user_id=userID, group_id=groupId WHERE id=choreId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
 };
 
 exports.update_rent_info = function(request, response) {
-	attributes = []
-	placeholders = []
-	skeleton = ""
+	attributes = ["amount", "paid", "userID"]
+	placeholders = ["amount", "paid", "userID", "groupId"]
+	skeleton = "UPDATE rent SET rent_amount=amount, rent_paid=paid, user_id=userID WHERE group_id=groupId"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
 };
