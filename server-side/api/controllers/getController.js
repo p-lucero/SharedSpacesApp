@@ -85,7 +85,7 @@ exports.get_group_debt_info = function(request, response) {
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
-exports.list_personal_debts = function(request, response) {
+exports.get_personal_debt_list = function(request, response) {
 	attributes = []
 	placeholders = [new RegExp("userId", "g")]
 	skeleton = "SELECT * FROM personal_debts WHERE lender_id=userId OR borrower_id=userId"

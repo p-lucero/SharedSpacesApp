@@ -44,7 +44,7 @@ module.exports = function(app) {
 		.post(postController.create_new_personal_debt)
 
 	app.route('/api/personalDebts/:userId')
-		.get(getController.list_personal_debts)
+		.get(getController.get_personal_debt_list)
 
 	app.route('/api/personalDebts/:userId/:debtId')
 		.get(getController.get_personal_debt_info)
