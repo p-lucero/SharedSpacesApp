@@ -21,7 +21,7 @@ exports.dummy_function = function(request, response) {
 
 function group_info_helper3(data, err, task, request, response) {
 	if (err){
-		response.send(err);
+		response.status(400).send(err);
 	}
 	else {
 		data.debts = task
@@ -31,7 +31,7 @@ function group_info_helper3(data, err, task, request, response) {
 
 function group_info_helper2(data, err, task, request, response) {
 	if (err){
-		response.send(err);
+		response.status(400).send(err);
 	}
 	else {
 		data.users = task
@@ -42,7 +42,7 @@ function group_info_helper2(data, err, task, request, response) {
 
 function group_info_helper1(data, err, task, request, response) {
 	if (err){
-		response.send(err);
+		response.status(400).send(err);
 	}
 	else {
 		data.group_info = task

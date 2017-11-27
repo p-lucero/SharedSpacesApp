@@ -18,7 +18,7 @@ exports.update_group_info = function(request, response) {
 	placeholders = ["groupId"]
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 /*
@@ -64,7 +64,7 @@ exports.update_user_info = function(reqeust, response) {
 	placeholders = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID", "userId"]
 	skeleton = "UPDATE user_accounts SET first_name=?, last_name=?, email=?, password=?, phone_number=?, facebook_profile=?, twitter_handle=?, instagram=?, group_id=? WHERE id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 }
 
 exports.update_group_debt = function(request, response) {
@@ -72,7 +72,7 @@ exports.update_group_debt = function(request, response) {
 	placeholders = ["debtType", "amount", "groupId", "debtId"]
 	skeleton = "UPDATE group_debt SET debt_type=?, amount=?, group_id=? WHERE id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 exports.update_personal_debt = function(request, response) {
@@ -80,7 +80,7 @@ exports.update_personal_debt = function(request, response) {
 	placeholders = ["amount", "lenderID", "borrowerID", "debtId"]
 	skeleton = "UPDATE personal_debts SET amount=?, lender_id=?, borrower_id=? where id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 exports.update_grocery_item = function(request, response) {
@@ -88,7 +88,7 @@ exports.update_grocery_item = function(request, response) {
 	placeholders = ["amount", "paid", "userID", "groupId", "groceryId"]
 	skeleton = "UPDATE groceries SET amount_due=?, paid_status=?, user_id=?, group_id=? WHERE id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 exports.update_chore_item = function(request, response) {
@@ -96,7 +96,7 @@ exports.update_chore_item = function(request, response) {
 	placeholders = ["chore", "duedate", "complete", "userID", "groupId", "choreId"]
 	skeleton = "UPDATE chores SET chore=?, due_date=?, chore_complete=?, user_id=?, group_id=? WHERE id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 exports.update_rent_info = function(request, response) {
@@ -104,5 +104,5 @@ exports.update_rent_info = function(request, response) {
 	placeholders = ["amount", "paid", "userID", "groupId"]
 	skeleton = "UPDATE rent SET rent_amount=?, rent_paid=?, user_id=? WHERE group_id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };

@@ -5,7 +5,7 @@ var common = require('../models/commonModel.js');
 
 function create_group_helper(data, err, task, request, response){
 	if (err){
-		response.send(err);
+		response.status(400).send(err);
 	}
 	else {
 		common.perform_query(["groupName"], ["groupName"], "SELECT id FROM groups WHERE group_name=?;", true, null, null, request, response)
@@ -22,7 +22,7 @@ exports.create_new_group = function(request, response){
 
 function create_user_helper(data, err, task, request, response){
 	if (err){
-		response.send(err);
+		response.status(400).send(err);
 	}
 	else {
 		common.perform_query(["email"], ["email"], "SELECT id from user_accounts WHERE email=?;", true, null, null, request, response)
@@ -42,7 +42,7 @@ exports.create_group_debt = function(request, response) {
 	placeholders = ["debtType", "amount", "groupId"]
 	skeleton = "INSERT INTO group_debt(debt_type, amount, group_id) VALUES (?, ?, ?);"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 exports.create_new_personal_debt = function(request, response) {
@@ -50,7 +50,7 @@ exports.create_new_personal_debt = function(request, response) {
 	placeholders = ["amount", "lender", "borrower"]
 	skeleton = "INSERT INTO personal_debts (amount, lender_id, borrower_id) VALUES (?, ?, ?);"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 exports.create_new_grocery_item = function(request, response) {
@@ -58,7 +58,7 @@ exports.create_new_grocery_item = function(request, response) {
 	placeholders = ["amount", "userID", "groupId"]
 	skeleton = "INSERT INTO groceries (amount_due, paid_status, user_id, group_id) VALUES (?, false, ?, ?);"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 exports.create_new_chore = function(request, response) {
@@ -66,7 +66,7 @@ exports.create_new_chore = function(request, response) {
 	placeholders = ["chore", "due_date", "userID", "groupId"]
 	skeleton = "INSERT INTO chores (chore, due_date, chore_complete, user_id, group_id) VALUES (?, ?, false, ?, ?);"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
 
 exports.create_new_rent_item = function(request, response) {
@@ -74,5 +74,5 @@ exports.create_new_rent_item = function(request, response) {
 	placeholders = ["amount", "userID", "groupId"]
 	skeleton = "INSERT INTO rent (rent_amount, rent_paid, user_id, group_id) VALUES (?, false, ?, ?)"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };

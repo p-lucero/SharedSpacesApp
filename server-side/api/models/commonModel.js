@@ -15,6 +15,15 @@ function ensure_attributes(body, desiredAttributes) {
 	return body;
 }
 
+exports.return_truefalse = function(data, err, task, request, response) { // Returns 200 OK if the request was successful. Returns the error otherwise.
+	if (err) {
+		response.status(400).send(err)
+	}
+	else {
+		response.json(200) // this is apparently valid expressJS code
+	}
+}
+
 /*
 Parameters are as follows:
 
@@ -65,7 +74,7 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 			else {
 				global.pool.query(skeleton, parameters, function(err, task) {
 					if (err) {
-						response.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
+						response.status(400).send(err); // This must be interpreted by the client. Make a way to do this in the UI!
 					}
 					else {
 						response.json(task); // Return the responses of the SQL query to the client to be interpreted and pretty-printed by the React UI
