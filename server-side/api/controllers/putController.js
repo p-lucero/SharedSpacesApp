@@ -2,61 +2,24 @@
 
 var common = require('../models/commonModel.js');
 
-// async boilerplate
-// function foo(data, err, task, request, response){
-// 	if (err){
-// 		response.send(err);
-// 	}
-// 	else {
-// 		common.perform_query(attributes, placeholders, skeleton, true, data, callback, request, response)
-// 	}
-// }
-
 exports.update_group_info = function(request, response) {
+	/* Specific auth: check that the user submitting the query is in the group
+	UPDATE groups SET name=?, ground_rules=? WHERE id=?
+	terrible async chain w/self referential functions & incrementation
+	SELECT id FROM users WHERE group_id=?
+	find the items that are in group but not in update
+	find the items that are in update but not in group
+	for the former:
+	UPDATE users SET group_id=null WHERE id=? OR id=?... as needed
+	for the latter:
+	UPDATE users SET group_id=? WHERE id=? OR id=?... as needed
+	structure of users in submission is as yet unknown */
 	var attributes = []
 	var placeholders = []
 	var skeleton = "SELECT 1;"
 	var specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
-
-/*
-exports.update_user_info = function(request, response) {
-	var attributes = []
-	var placeholders = []	
-	request.body._email = request.body.email // deal with name shadowing
-	request.body.pw = request.body.password
-	request.body._insta = request.body.instagram
-	request.body._facebook = request.body.facebook
-	request.body._twitter = request.body.twitter
-	request.body._first = request.body.first
-	request.body._last = request.body.last
-	possible_var attributes = {"first_name":"_first", "last_name":"_last", "email":"_email", "password":"pw",
-	"phone_number":"phoneNumber", "facebook_profile":"_facebook", "twitter_handle":"_twitter", "instagram":"_insta", "group_id":"groupID"}
-	var skeleton = "UPDATE user_accounts SET "
-	for (attr in possible_attributes) {
-		if (typeof(request.body[possible_attributes[attr]]) !== "undefined"){ // see if the updated data contains this attribute
-			skeleton += attr
-			skeleton += "="
-			skeleton += request.body[possible_attributes[attr]]
-		}
-	}
-	if (!skeleton.contains("=")) {
-		response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
-	}
-	else {
-		var skeleton = skeleton.slice(0, -1);
-		skeleton += " WHERE id = userId"
-		var specificAuth = true
-		common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
-	}
-};
-*/
-
-/*
-Simpler implementation of the above in the case where unchanged data is also sent to the server rather than just deltas.
-Enable or disable as needed.
-*/
 
 exports.update_user_info = function(request, response) {
 	var attributes = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID"]

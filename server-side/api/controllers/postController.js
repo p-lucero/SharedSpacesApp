@@ -2,38 +2,34 @@
 
 var common = require('../models/commonModel.js');
 
-function create_group_helper(data, err, task, request, response){
+exports.create_new_group = function(request, response){
+	var attributes = ["groupName"]
+	var placeholders = ["groupName"]
+	var skeleton = "INSERT INTO groups (group_name) VALUES (?);"
+	var specificAuth = true
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, function (data, err, task, request, response){
 	if (err){
 		response.status(400).send(err);
 	}
 	else {
 		common.perform_query(["groupName"], ["groupName"], "SELECT id FROM groups WHERE group_name=?;", true, null, null, request, response)
 	}
-}
-
-exports.create_new_group = function(request, response){
-	var attributes = ["groupName"]
-	var placeholders = ["groupName"]
-	var skeleton = "INSERT INTO groups (group_name) VALUES (?);"
-	var specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, create_group_helper, request, response)
+}, request, response)
 };
-
-function create_user_helper(data, err, task, request, response){
-	if (err){
-		response.status(400).send(err);
-	}
-	else {
-		common.perform_query(["email"], ["email"], "SELECT id from user_accounts WHERE email=?;", true, null, null, request, response)
-	}
-}
 
 exports.create_new_user = function(request, response) { // FIXME this should probably check if a user with that email is already in the database and refuse to create if so
 	var attributes = ["first", "last", "email", "password", "phoneNumber"]
 	var placeholders = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID"]
 	var skeleton = "INSERT INTO user_accounts (first_name, last_name, email, password, phone_number, facebook_profile, twitter_handle, instagram, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
 	var specificAuth = true // this doesn't need to be fixed; anyone should be able to create user accounts without any specific authentication
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, create_user_helper, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, function (data, err, task, request, response){
+	if (err){
+		response.status(400).send(err);
+	}
+	else {
+		common.perform_query(["email"], ["email"], "SELECT id from user_accounts WHERE email=?;", true, null, null, request, response)
+	}
+}, request, response)
 };
 
 exports.create_group_debt = function(request, response) {

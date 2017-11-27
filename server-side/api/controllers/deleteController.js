@@ -16,6 +16,7 @@ exports.delete_user = function(request, response) {
 	var skeleton = "DELETE FROM users WHERE id=?;"
 	var specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
+	// make sure to log the user out here
 };
 
 exports.delete_group_debt = function(request, response) {

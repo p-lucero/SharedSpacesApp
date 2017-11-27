@@ -2,52 +2,11 @@
 
 var common = require('../models/commonModel.js');
 
-// async boilerplate
-// function foo(data, err, task, request, response){
-// 	if (err){
-// 		response.send(err);
-// 	}
-// 	else {
-// 		common.perform_query(attributes, placeholders, skeleton, true, data, callback, request, response)
-// 	}
-// }
-
 exports.dummy_function = function(request, response) {
 	// verifies something or returns something or something as is needed for testing purposes
 	// don't actually bother fleshing this out to do anything meaningful
 	// you can access this by going to /api/dummy
-}
-
-function group_info_helper3(data, err, task, request, response) {
-	if (err){
-		response.status(400).send(err);
-	}
-	else {
-		data.debts = task
-		response.json(data);
-	}
-}
-
-function group_info_helper2(data, err, task, request, response) {
-	if (err){
-		response.status(400).send(err);
-	}
-	else {
-		data.users = task
-		var skeleton = "SELECT * FROM group_debts WHERE group_id=?;"
-		common.perform_query([], ["groupId"], skeleton, true, data, group_info_helper3, request, response)
-	}
-}
-
-function group_info_helper1(data, err, task, request, response) {
-	if (err){
-		response.status(400).send(err);
-	}
-	else {
-		data.group_info = task
-		var skeleton = "SELECT * FROM user_accounts WHERE group_id=?;"
-		common.perform_query([], ["groupId"], skeleton, true, data, group_info_helper2, request, response)
-	}
+	response.json(200)
 }
 
 exports.get_group_info = function(request, response) {
@@ -55,10 +14,34 @@ exports.get_group_info = function(request, response) {
 	var placeholders = ["groupId"]
 	var skeleton = "SELECT group_name, id FROM groups WHERE id=?;"
 	var specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, {}, group_info_helper1, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, {}, function (data, err, task, request, response) {
+	if (err){
+		response.status(400).send(err);
+	}
+	else {
+		data.group_info = task
+		var skeleton = "SELECT * FROM user_accounts WHERE group_id=?;"
+		common.perform_query([], ["groupId"], skeleton, true, data, function (data, err, task, request, response) {
+	if (err){
+		response.status(400).send(err);
+	}
+	else {
+		data.users = task
+		var skeleton = "SELECT * FROM group_debts WHERE group_id=?;"
+		common.perform_query([], ["groupId"], skeleton, true, data, function (data, err, task, request, response) {
+	if (err){
+		response.status(400).send(err);
+	}
+	else {
+		data.debts = task
+		response.json(data);
+	}
+}, request, response)
+	}
+}, request, response)
+	}
+}, request, response)
 };
-
-
 
 exports.get_user_info = function(request, response) {
 	var attributes = []
@@ -139,24 +122,6 @@ exports.get_rent_info = function(request, response) {
 	var specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
-
-/*
-	exports.FUNCTIONNAME = function(request, response) {
-		var attributes = [] // an array of strings containing all required attributes in the user's request
-		var placeholders = [] // an array of strings containing all things to replace in skeleton(s); subset of attributes
-		var skeleton = "" // the basic skeleton of a SQL query for this function
-		body = common.ensure_attributes(request.body, attributes)
-		if (!body) {
-			response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
-		}
-		else {
-			commonAuth = common.ensure_login() // FIXME
-			var specificAuth = true // FIXME, more specific authentication code should go here
-			authenticated = commonAuth && specificAuth
-			common.perform_query(authenticated, skeleton, body, placeholders, response)
-		}
-	};
-*/
 
 // Fire away at this server with the following Python code to beta test things:
 // >>> import requests
