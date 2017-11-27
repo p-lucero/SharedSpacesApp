@@ -2,7 +2,6 @@ var express = require('express'),
   app = express(),
   port = process.env.PORT || 3001,
   mysql = require('mysql'),
-  Task = require('./api/models/serverModel'),
   bodyParser = require('body-parser');
 
 

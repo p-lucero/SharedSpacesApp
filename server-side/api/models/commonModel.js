@@ -7,7 +7,7 @@ function ensure_login() {
 }
 
 function ensure_attributes(body, desiredAttributes) {
-	for (attribute of desiredAttributes){
+	for (let attribute of desiredAttributes){
 		if (typeof body[attribute] === "undefined"){
 			return false;
 		}
@@ -38,27 +38,27 @@ Parameters are as follows:
 */
 
 exports.perform_query = function(attributes, placeholders, skeleton, specificAuth, data, callback, request, response) {
-	parameters = [] 
-	commonAuth = ensure_login()
+	var parameters = [] 
+	var commonAuth = ensure_login()
 	if (skeleton.includes("INSERT INTO user_accounts")) {
 		commonAuth = true // hack to ensure that a user account can always be created
 	}
-	authenticated = commonAuth && specificAuth
+	var authenticated = commonAuth && specificAuth
 	if (!authenticated){
 		response.status(403).send({url: request.originalUrl + " forbidden"})
 		return true;
 	}
 	else {
-		body = ensure_attributes(request.body, attributes)
+		var body = ensure_attributes(request.body, attributes)
 		if (!body){
 			response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
 			return true;
 		}
 		else {
-			for (param in request.params) { // move anything that was specified in the URL to the request body
+			for (let param in request.params) { // move anything that was specified in the URL to the request body
 				body[param] = request.params[param]
 			}
-			for (ph of placeholders) { // prepare parameters to be substituted into the query skeleton
+			for (let ph of placeholders) { // prepare parameters to be substituted into the query skeleton
 				parameters.push(body[ph])
 			}
 			if (callback !== null) { // there are more queries required and this is only one of several
