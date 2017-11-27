@@ -1,35 +1,107 @@
 'use strict';
 
-var mysql = require('mysql');
+var common = require('../models/commonModel.js');
+
+// async boilerplate
+// function foo(data, err, task, request, response){
+// 	if (err){
+// 		response.send(err);
+// 	}
+// 	else {
+// 		common.perform_query(attributes, placeholders, skeleton, true, data, callback, request, response)
+// 	}
+// }
+
+exports.update_group_info = function(request, response) {
+	var attributes = []
+	var placeholders = []
+	var skeleton = "SELECT 1;"
+	var specificAuth = true
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
+};
 
 /*
-	exports.FUNCTIONNAME = function(request, result) {
-		// Parse the request into a valid SQL query with some common parser code from models
-		// If the request is invalid, return 400 status code (bad request). Make sure the client has code to process this?
-		// request['body'] (maybe also request.body since it's JS?) contains the body of the request
-		// Call some common authentication code (this can maybe be stored in models and take the form of a meaningful authentication model for each of these)
-		// It's possible that some common code may be able to authenticate if the user exists and is logged in
-		// and depending on the request type, we can then pass that to a more specific function that ensures the user has valid permissions to do such a thing
-		// Once we're sure we've got a valid SQL query to submit, we can then query the server
-		// Example code:
-
-		var parsed_request = parse_request(request);
-		if (parsed_request) { // this is a valid null check!
-			result.status(400).send({url: request.originalUrl + " received a badly formatted request"})
+exports.update_user_info = function(request, response) {
+	var attributes = []
+	var placeholders = []	
+	request.body._email = request.body.email // deal with name shadowing
+	request.body.pw = request.body.password
+	request.body._insta = request.body.instagram
+	request.body._facebook = request.body.facebook
+	request.body._twitter = request.body.twitter
+	request.body._first = request.body.first
+	request.body._last = request.body.last
+	possible_var attributes = {"first_name":"_first", "last_name":"_last", "email":"_email", "password":"pw",
+	"phone_number":"phoneNumber", "facebook_profile":"_facebook", "twitter_handle":"_twitter", "instagram":"_insta", "group_id":"groupID"}
+	var skeleton = "UPDATE user_accounts SET "
+	for (attr in possible_attributes) {
+		if (typeof(request.body[possible_attributes[attr]]) !== "undefined"){ // see if the updated data contains this attribute
+			skeleton += attr
+			skeleton += "="
+			skeleton += request.body[possible_attributes[attr]]
 		}
-		var request_type = some request type // FIXME
-		var authenticated = common_authenticate(request, request_type);
-		if (authenticated) {
-			global.con.query(parsed_request, function(err, task) {
-				if (err) {
-					result.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
-				}
-				else
-					result.json(task); // Return the results of the SQL query to the client to be interpreted and pretty-printed by the React UI
-			});
-		}
-		else {
-			result.status(403).send({url: request.originalUrl + " forbidden"})
-		}
-	};
+	}
+	if (!skeleton.contains("=")) {
+		response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
+	}
+	else {
+		var skeleton = skeleton.slice(0, -1);
+		skeleton += " WHERE id = userId"
+		var specificAuth = true
+		common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	}
+};
 */
+
+/*
+Simpler implementation of the above in the case where unchanged data is also sent to the server rather than just deltas.
+Enable or disable as needed.
+*/
+
+exports.update_user_info = function(request, response) {
+	var attributes = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID"]
+	var placeholders = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID", "userId"]
+	var skeleton = "UPDATE user_accounts SET first_name=?, last_name=?, email=?, password=?, phone_number=?, facebook_profile=?, twitter_handle=?, instagram=?, group_id=? WHERE id=?;"
+	var specificAuth = true
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
+}
+
+exports.update_group_debt = function(request, response) {
+	var attributes = ["debtType", "amount"]
+	var placeholders = ["debtType", "amount", "groupId", "debtId"]
+	var skeleton = "UPDATE group_debt SET debt_type=?, amount=?, group_id=? WHERE id=?;"
+	var specificAuth = true
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
+};
+
+exports.update_personal_debt = function(request, response) {
+	var attributes = ["amount", "lenderID", "borrowerID"]
+	var placeholders = ["amount", "lenderID", "borrowerID", "debtId"]
+	var skeleton = "UPDATE personal_debts SET amount=?, lender_id=?, borrower_id=? where id=?;"
+	var specificAuth = true
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
+};
+
+exports.update_grocery_item = function(request, response) {
+	var attributes = ["amount", "paid", "userID"]
+	var placeholders = ["amount", "paid", "userID", "groupId", "groceryId"]
+	var skeleton = "UPDATE groceries SET amount_due=?, paid_status=?, user_id=?, group_id=? WHERE id=?;"
+	var specificAuth = true
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
+};
+
+exports.update_chore_item = function(request, response) {
+	var attributes = ["chore", "duedate", "complete", "userID"]
+	var placeholders = ["chore", "duedate", "complete", "userID", "groupId", "choreId"]
+	var skeleton = "UPDATE chores SET chore=?, due_date=?, chore_complete=?, user_id=?, group_id=? WHERE id=?;"
+	var specificAuth = true
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
+};
+
+exports.update_rent_info = function(request, response) {
+	var attributes = ["amount", "paid", "userID"]
+	var placeholders = ["amount", "paid", "userID", "groupId"]
+	var skeleton = "UPDATE rent SET rent_amount=?, rent_paid=?, user_id=? WHERE group_id=?;"
+	var specificAuth = true
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
+};
