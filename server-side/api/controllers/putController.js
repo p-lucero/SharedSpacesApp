@@ -18,7 +18,7 @@ exports.update_group_info = function(request, response) {
 	placeholders = ["groupId"]
 	skeleton = ""
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 /*
@@ -60,60 +60,49 @@ Enable or disable as needed.
 */
 
 exports.update_user_info = function(reqeust, response) {
-	attributes = ["_first", "_last", "_email", "pw", "phoneNumber", "_facebook", "_insta", "_twitter", "groupID"]
-	placeholders = ["_first", "_last", "_email", "pw", "phoneNumber", "_facebook", "_insta", "_twitter", "groupID", "userId"]	
-	request.body._email = request.body.email // deal with name shadowing
-	request.body.pw = request.body.password
-	request.body._insta = request.body.instagram
-	request.body._facebook = request.body.facebook
-	request.body._twitter = request.body.twitter
-	request.body._first = request.body.first
-	request.body._last = request.body.last
-	skeleton = "UPDATE user_accounts SET first_name=_first, last_name=_last, email=_email, password=pw, phone_number=phoneNumber, \
-	facebook_profile=_facebook, twitter_handle=_twitter, instagram=_insta, group_id=groupID WHERE id=userId"
+	attributes = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID"]
+	placeholders = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID", "userId"]
+	skeleton = "UPDATE user_accounts SET first_name=?, last_name=?, email=?, password=?, phone_number=?, facebook_profile=?, twitter_handle=?, instagram=?, group_id=? WHERE id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 }
 
 exports.update_group_debt = function(request, response) {
-	attributes = ["debtType", "_amount"]
-	placeholders = ["debtType", "_amount", "groupId", "debtId"]
-	request.body._amount = request.body.amount
-	skeleton = "UPDATE group_debt SET debt_type=debtType, amount=_amount, group_id=groupId WHERE id=debtId"
+	attributes = ["debtType", "amount"]
+	placeholders = ["debtType", "amount", "groupId", "debtId"]
+	skeleton = "UPDATE group_debt SET debt_type=?, amount=?, group_id=? WHERE id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.update_personal_debt = function(request, response) {
-	attributes = ["_amount", "lenderID", "borrowerID"]
-	placeholders = ["_amount", "lenderID", "borrowerID", "debtId"]
-	request.body._amount = request.body.amount
-	skeleton = "UPDATE personal_debts SET amount=_amount, lender_id=lenderID, borrower_id=borrowerID where id=debtId"
+	attributes = ["amount", "lenderID", "borrowerID"]
+	placeholders = ["amount", "lenderID", "borrowerID", "debtId"]
+	skeleton = "UPDATE personal_debts SET amount=?, lender_id=?, borrower_id=? where id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.update_grocery_item = function(request, response) {
 	attributes = ["amount", "paid", "userID"]
 	placeholders = ["amount", "paid", "userID", "groupId", "groceryId"]
-	skeleton = "UPDATE groceries SET amount_due=amount, paid_status=paid, user_id=userID, group_id=groupId WHERE id=groceryId"
+	skeleton = "UPDATE groceries SET amount_due=?, paid_status=?, user_id=?, group_id=? WHERE id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.update_chore_item = function(request, response) {
-	attributes = ["_chore", "duedate", "complete", "userID"]
-	placeholders = ["_chore", "duedate", "complete", "userID", "groupId", "choreId"]
-	request.body._chore = request.body.chore
-	skeleton = "UPDATE chores SET chore=_chore, due_date=duedate, chore_complete=complete, user_id=userID, group_id=groupId WHERE id=choreId"
+	attributes = ["chore", "duedate", "complete", "userID"]
+	placeholders = ["chore", "duedate", "complete", "userID", "groupId", "choreId"]
+	skeleton = "UPDATE chores SET chore=?, due_date=?, chore_complete=?, user_id=?, group_id=? WHERE id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };
 
 exports.update_rent_info = function(request, response) {
 	attributes = ["amount", "paid", "userID"]
 	placeholders = ["amount", "paid", "userID", "groupId"]
-	skeleton = "UPDATE rent SET rent_amount=amount, rent_paid=paid, user_id=userID WHERE group_id=groupId"
+	skeleton = "UPDATE rent SET rent_amount=?, rent_paid=?, user_id=? WHERE group_id=?"
 	specificAuth = true
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, request, response)
+	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, null, request, response)
 };

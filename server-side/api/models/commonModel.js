@@ -29,6 +29,7 @@ Parameters are as follows:
 */
 
 exports.perform_query = function(attributes, placeholders, skeleton, specificAuth, data, callback, request, response) {
+	parameters = [] 
 	commonAuth = ensure_login()
 	if (skeleton.includes("INSERT INTO user_accounts")) {
 		commonAuth = true // hack to ensure that a user account can always be created
@@ -48,21 +49,11 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 			for (param in request.params) { // move anything that was specified in the URL to the request body
 				body[param] = request.params[param]
 			}
-			for (ph of placeholders) { // perform parameter substitution in the query skeleton
-				let replacement = ""
-				if (typeof(body[ph]) === "undefined"){
-					replacement = "null" // deal with any optional parameters that aren't present
-				}
-				else if (isNaN(body[ph])){
-					replacement = "'" + body[ph] + "'" // non-numerical values should be in single quotes
-				}
-				else {
-					replacement = body[ph] // numerical values should be just numeric, no quotes
-				}
-				skeleton = skeleton.replace(ph, replacement)
+			for (ph of placeholders) { // prepare parameters to be substituted into the query skeleton
+				parameters.push(body[ph])
 			}
 			if (callback !== null) { // there are more queries required and this is only one of several
-				global.pool.query(skeleton, function(err, task) {
+				global.pool.query(skeleton, parameters, function(err, task) {
 					if (err){
 						callback(data, err, null, request, response); // which produces absolutely disgusting code
 					}
@@ -72,7 +63,7 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 				});
 			}
 			else {
-				global.pool.query(skeleton, function(err, task) {
+				global.pool.query(skeleton, parameters, function(err, task) {
 					if (err) {
 						response.send(err); // This must be interpreted by the client. Make a way to do this in the UI!
 					}
