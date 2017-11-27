@@ -15,8 +15,8 @@ var common = require('../models/commonModel.js');
 
 exports.update_group_info = function(request, response) {
 	attributes = []
-	placeholders = ["groupId"]
-	skeleton = ""
+	placeholders = []
+	skeleton = "SELECT 1;"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
@@ -62,7 +62,7 @@ Enable or disable as needed.
 exports.update_user_info = function(reqeust, response) {
 	attributes = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID"]
 	placeholders = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID", "userId"]
-	skeleton = "UPDATE user_accounts SET first_name=?, last_name=?, email=?, password=?, phone_number=?, facebook_profile=?, twitter_handle=?, instagram=?, group_id=? WHERE id=?"
+	skeleton = "UPDATE user_accounts SET first_name=?, last_name=?, email=?, password=?, phone_number=?, facebook_profile=?, twitter_handle=?, instagram=?, group_id=? WHERE id=?;"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 }
@@ -70,7 +70,7 @@ exports.update_user_info = function(reqeust, response) {
 exports.update_group_debt = function(request, response) {
 	attributes = ["debtType", "amount"]
 	placeholders = ["debtType", "amount", "groupId", "debtId"]
-	skeleton = "UPDATE group_debt SET debt_type=?, amount=?, group_id=? WHERE id=?"
+	skeleton = "UPDATE group_debt SET debt_type=?, amount=?, group_id=? WHERE id=?;"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
@@ -78,7 +78,7 @@ exports.update_group_debt = function(request, response) {
 exports.update_personal_debt = function(request, response) {
 	attributes = ["amount", "lenderID", "borrowerID"]
 	placeholders = ["amount", "lenderID", "borrowerID", "debtId"]
-	skeleton = "UPDATE personal_debts SET amount=?, lender_id=?, borrower_id=? where id=?"
+	skeleton = "UPDATE personal_debts SET amount=?, lender_id=?, borrower_id=? where id=?;"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
@@ -86,7 +86,7 @@ exports.update_personal_debt = function(request, response) {
 exports.update_grocery_item = function(request, response) {
 	attributes = ["amount", "paid", "userID"]
 	placeholders = ["amount", "paid", "userID", "groupId", "groceryId"]
-	skeleton = "UPDATE groceries SET amount_due=?, paid_status=?, user_id=?, group_id=? WHERE id=?"
+	skeleton = "UPDATE groceries SET amount_due=?, paid_status=?, user_id=?, group_id=? WHERE id=?;"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
@@ -94,7 +94,7 @@ exports.update_grocery_item = function(request, response) {
 exports.update_chore_item = function(request, response) {
 	attributes = ["chore", "duedate", "complete", "userID"]
 	placeholders = ["chore", "duedate", "complete", "userID", "groupId", "choreId"]
-	skeleton = "UPDATE chores SET chore=?, due_date=?, chore_complete=?, user_id=?, group_id=? WHERE id=?"
+	skeleton = "UPDATE chores SET chore=?, due_date=?, chore_complete=?, user_id=?, group_id=? WHERE id=?;"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
@@ -102,7 +102,7 @@ exports.update_chore_item = function(request, response) {
 exports.update_rent_info = function(request, response) {
 	attributes = ["amount", "paid", "userID"]
 	placeholders = ["amount", "paid", "userID", "groupId"]
-	skeleton = "UPDATE rent SET rent_amount=?, rent_paid=?, user_id=? WHERE group_id=?"
+	skeleton = "UPDATE rent SET rent_amount=?, rent_paid=?, user_id=? WHERE group_id=?;"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };

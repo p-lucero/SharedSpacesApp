@@ -15,7 +15,7 @@ function create_group_helper(data, err, task, request, response){
 exports.create_new_group = function(request, response){
 	attributes = ["groupName"]
 	placeholders = ["groupName"]
-	skeleton = "INSERT INTO groups (group_name) VALUES (?)"
+	skeleton = "INSERT INTO groups (group_name) VALUES (?);"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, create_group_helper, request, response)
 };
@@ -72,7 +72,7 @@ exports.create_new_chore = function(request, response) {
 exports.create_new_rent_item = function(request, response) {
 	attributes = ["amount", "userID"]
 	placeholders = ["amount", "userID", "groupId"]
-	skeleton = "INSERT INTO rent (rent_amount, rent_paid, user_id, group_id) VALUES (?, false, ?, ?)"
+	skeleton = "INSERT INTO rent (rent_amount, rent_paid, user_id, group_id) VALUES (?, false, ?, ?);"
 	specificAuth = true
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
 };
