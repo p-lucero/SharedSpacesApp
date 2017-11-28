@@ -13,7 +13,11 @@ exports.get_group_info = function(request, response) {
 	var attributes = [] // this query has to progress in stages because there's no good way of meaningfully joining these tables
 	var placeholders = ["groupId"]
 	var skeleton = "SELECT group_name, id FROM groups WHERE id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
+	if (!userInfo || userInfo.groupID != request.body.groupId){
+		authenticated = false
+	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, {}, function (data, err, task, request, response) {
 		if (err){
 			response.status(400).send(err);
@@ -47,15 +51,28 @@ exports.get_user_info = function(request, response) {
 	var attributes = []
 	var placeholders = ["userId"]
 	var skeleton = "SELECT * FROM user_accounts WHERE id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+	if (!userInfo){
+		authenticated = false
+	}
+	global.pool.query("SELECT group_id from user_accounts WHERE email=?", [userInfo.email], function(err, task) {
+		if (task[0].group_id != userInfo.groupID && request.params.userId != userInfo.userID){
+			authenticated = false
+		}
+		common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+	})
 };
 
 exports.get_group_debt_list = function(request, response) {
 	var attributes = []
 	var placeholders = ["groupId"]
 	var skeleton = "SELECT * FROM group_debt WHERE group_id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
+	if (!userInfo || request.params.groupId != userInfo.groupID){
+		authenticated = false
+	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 };
 
@@ -63,7 +80,11 @@ exports.get_group_debt_info = function(request, response) {
 	var attributes = []
 	var placeholders = ["debtId"]
 	var skeleton = "SELECT * FROM group_debt WHERE id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
+	if (!userInfo || request.params.groupId != userInfo.groupID){
+		authenticated = false
+	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 };
 
@@ -71,7 +92,11 @@ exports.get_personal_debt_list = function(request, response) {
 	var attributes = []
 	var placeholders = ["userId", "userId"]
 	var skeleton = "SELECT * FROM personal_debts WHERE lender_id=? OR borrower_id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
+	if (!userInfo || request.params.userId != userInfo.userID){
+		authenticated = false
+	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 };
 
@@ -79,15 +104,33 @@ exports.get_personal_debt_info = function(request, response) {
 	var attributes = []
 	var placeholders = ["debtId"]
 	var skeleton = "SELECT * FROM personal_debts WHERE id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+	if (!userInfo){
+		authenticated = false
+	}
+	global.pool.query("SELECT group_id FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
+		if (task.length === 0){
+			request.status(404).send({url: request.originalUrl + " not found"})
+		}
+		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+			authenticated = false
+		}
+		else {
+			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+		}
+	})
 };
 
 exports.get_grocery_list = function(request, response) {
 	var attributes = []
 	var placeholders = ["groupId"]
 	var skeleton = "SELECT * FROM groceries WHERE group_id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
+	if (!userInfo || request.params.groupId != userInfo.groupID){
+		authenticated = false
+	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 };
 
@@ -95,15 +138,33 @@ exports.get_grocery_item = function(request, response) {
 	var attributes = []
 	var placeholders = ["groceryId"]
 	var skeleton = "SELECT * FROM groceries WHERE id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+	if (!userInfo){
+		authenticated = false
+	}
+	global.pool.query("SELECT group_id FROM groceries WHERE id=?", [request.params.groceryId], function(err, task){
+		if (task.length === 0){
+			request.status(404).send({url: request.originalUrl + " not found"})
+		}
+		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+			authenticated = false
+		}
+		else {
+			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+		}
+	})
 };
 
 exports.get_chores_list = function(request, response) {
 	var attributes = []
 	var placeholders = ["groupId"]
 	var skeleton = "SELECT * FROM chores WHERE group_id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
+	if (!userInfo || request.params.groupId != userInfo.groupID){
+		authenticated = false
+	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 };
 
@@ -111,15 +172,33 @@ exports.get_chore_info = function(request, response) {
 	var attributes = []
 	var placeholders = ["choreId"]
 	var skeleton = "SELECT * FROM chores WHERE chore_id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+	if (!userInfo){
+		authenticated = false
+	}
+	global.pool.query("SELECT group_id FROM chores WHERE id=?", [request.params.choreId], function(err, task){
+		if (task.length === 0){
+			request.status(404).send({url: request.originalUrl + " not found"})
+		}
+		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+			authenticated = false
+		}
+		else {
+			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+		}
+	})
 };
 
 exports.get_rent_info = function(request, response) {
 	var attributes = []
 	var placeholders = ["groupId"]
 	var skeleton = "SELECT * FROM rent WHERE group_id=?;"
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
+	if (!userInfo || request.params.groupId != userInfo.groupID){
+		authenticated = false
+	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 };
 
