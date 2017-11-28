@@ -14,9 +14,13 @@ exports.delete_user = function(request, response) {
 	var attributes = [] 
 	var placeholders = ["userId"] 
 	var skeleton = "DELETE FROM users WHERE id=?;"
-	var specificAuth = true
+	var email = common.get_email_from_token
 	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, common.return_truefalse, request, response)
-	// make sure to log the user out here
+	for (let cachedLogin of global.loginCache) {
+		if (cachedLogin.email === email){
+			global.loginCache.splice(global.loginCache.indexOf(cachedLogin), 1) // log out user from everywhere since their account has been deleted
+		}
+	}
 };
 
 exports.delete_group_debt = function(request, response) {
