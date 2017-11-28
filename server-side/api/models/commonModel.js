@@ -45,7 +45,7 @@ exports.perform_query = function(attributes, placeholders, skeleton, specificAut
 	}
 	var authenticated = commonAuth && specificAuth
 	if (!authenticated){
-		response.status(403).send({url: request.originalUrl + " forbidden"})
+		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
 		return true;
 	}
 	else {
