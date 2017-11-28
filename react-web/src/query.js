@@ -9,7 +9,7 @@ const del = 'DELETE';
 const GID = 'GroupID';
 const UID = 'UserID';
 const PASS = 'Password';
-const DID = 'DebtID';
+const DID = 'debt_id';
 const GroceryID = 'GroceryID';
 const CID = 'ChoreID';
 //Attributes for additionial arguments
@@ -34,6 +34,7 @@ const twitter = 'twitter_handle';
 const instagram = 'instagram';1 
 //GroupDebt
 const debtType = 'debt_type';
+const debtID = 'debt_id';
 //Groceries
 const groceryAmountDue = 'amount_due';
 const groceryIsPaid = 'paid_status';
@@ -60,88 +61,20 @@ const rent = 'rent';
 function request(where, type, ...args){
 	args = args[0];								//Initialize the arguments variable
 	ending = ParseArgs(where, type, args);		//Creates an ending object that contains the url suffix and the additional arguments object that is passed to the server
-												//	Additional arguments (addArgs) is from an object that is passed with the relavent information, the passedrsedArgs 
+												//	Additional arguments (addArgs) is from an object that is passed with the relavent information, the parseArgs 
 												//	function will ensure that all of the relavent information is there and will alert if all of it is not there 
 	addArgs = ending.addArgs;					//The object argument in request does not allow dot notation so it requires its own object
 
 	//Request the server with a calling type (ie. GET, POST, etc), call the correct url with a valid location with the parsed arguments.
 	//With the parsed information it will return an object with the relavent information that should be within the response object 
 	//but right now it simply prints the result
-	//	Deffinitions: suffix is in the url (ie. 'groups/:groupID') and the addArgs is an object that is passed
+	//	Deffinitions: suffix is in the url (ie. 'groups/:groupID') and the addArgs is an JSON object that is passed
 	req({method: type, uri: 'http://18.216.3.210/api/' + where + '/' + ending.suffix, json : addArgs}, (error, response, body) => {
 		if(error) {return console.log(error);}
 		console.log('post ' + where +  ' status is: ' + response.statusCode);
 		console.log('post ' + where + ' body returned: ' + JSON.stringify(body));
 	});
 }
-
-/*
-function ParseSuffix(where, moreInfo){
-	if(moreInfo == undefined){moreInfo = {}}
-	suffix = '';
-
-	switch(where) {
-		default:
-			suffix = '';
-			break;
-		//********BEGIN CHANGE**********
-		case group:
-			if(GID in moreInfo){
-				suffix = moreInfo[GID];
-			}
-			break;
-		case users:
-			if(GID in moreInfo){
-				suffix = moreInfo[UID];
-			}
-			break;
-		case groupDebts:
-			if(!(GID in moreInfo)) {return ParseValError(GID,where)}
-			if(DID in moreInfo){
-				suffix = moreInfo[GID] + '/' + moreInfo[DID];
-			}
-			else {
-				suffix = moreInfo[GID];	
-			}
-			break;
-		case personalDebts:
-			if(UID in moreInfo){
-				if(DID in moreInfo){
-					suffix = moreInfo[UID] + '/' + moreInfo[DID];
-				}
-				else {
-					suffix = moreInfo[UID];
-				}
-			}
-			break;
-		case grocery:
-			if(!(GID in moreInfo)) {return ParseValError(UID,where)}
-			if(GroceryID in moreInfo){
-				suffix = moreInfo[GID] + '/' + moreInfo[GroceryID];
-			}
-			else {
-				suffix = moreInfo[GID];
-			}
-			break;
-		case chores:
-			if(!(GID in moreInfo)) {return ParseValError(GID, where)}
-			if(CID in moreInfo) {
-				suffix = moreInfo[GID] + '/' + moreInfo[CID];
-			}
-			else {
-				suffix = moreInfo[GID];
-			}
-			break;
-		//*********END CHANGE***********
-		case rent:
-			if(!(GID in moreInfo)) {return ParseValError(GID, where)}
-			suffix = moreInfo[GID];
-			break;
-	}
-
-	return(suffix);}
-	*/
-
 
 //Parses the relavent information and correctly routes to the correct server call with the information given
 function ParseArgs(where, type, moreInfo){
@@ -152,12 +85,12 @@ function ParseArgs(where, type, moreInfo){
 	switch(where) {								//Switch through the table in the server the request is calling upon
 		case group: 																	//If the request is calling on the groups table in the server
 			if(type == post){															//If the type is of a POST then no group id is required in the suffix
-				if (!(GID in moreInfo)){return parseValError(GID, where)}				//Ensure there is a group id
-				suffix = moreInfo[GID];													//Set the suffix
+				if (!(groupID in moreInfo)){return parseValError(groupID, where)}				//Ensure there is a group id
+				suffix = moreInfo[groupID];													//Set the suffix
 				addArgs.groupName = groupName in moreInfo ? moreInfo(groupName) : '';	//Set a group name if one if provided, if not set it as an empty string
 			}																			//
 			else{																		//If the request is not of type POST
-				addArgs.group_id = moreInfo[group_id];									//Set the group id in additional arguments since all GET, PUT, and DELETE require a group id 
+				addArgs.groupID = groupID in moreInfo ? moreInfo[groupID] : parseValError(groupID, where);//Set the group id in additional arguments since all GET, PUT, and DELETE require a group id 
 				if(type == put){														//
 					addArgs.groupName = moreInfo[groupName];							//Set the group name in additional arguments
 					//addArgs.users = moreInfo(users);		//Who is in the group 		//We may need to keep track of the users in a group so this is in such a case
@@ -193,11 +126,11 @@ function ParseArgs(where, type, moreInfo){
 			break;
 
 		case groupDebts: 																				//If the table the request is accessing is group debts
-			suffix = moreInfo[groupID];																	//Set the suffix
+			suffix = moreInfo[DID];																	//Set the suffix
 			addArgs.groupID = groupID in moreInfo ? moreInfo[groupID] : parseValError(GroupID, where);	//Set the group id in additional arguments if one exists, throw an error if not
 			if(PrimaryID in moreInfo){																				//A primary id is required in all but POST requests
 				suffix = suffix + '/' + moreInfo[PrimaryID];
-				addArgs.DebtID = PrimaryID in moreInfo ? moreInfo[PrimaryID] : parseValError(PrimaryID, where);		//Set the debt id
+				addArgs.debtID = PrimaryID in moreInfo ? moreInfo[PrimaryID] : parseValError(PrimaryID, where);		//Set the debt id
 				if(type == put){																					//The PUT request needs a lender and borrower
 					addArgs.lender = lender in moreInfo ? moreInfo[lender] : parseValError(lender, where);			//Set the lender attribute of additional arguments
 					addArgs.borrower = borrower in moreInfo ? moreInfo[borrower] : parseValError(borrower, where);	//Set the borrower attribute of additional arguments
@@ -220,8 +153,8 @@ function ParseArgs(where, type, moreInfo){
 					addArgs.borrower = borrower in moreInfo ? moreInfo[borrower] : parseValError(borrower, where);	//Set the borrower attribute of additional arguments
 					break;
 				case get: 									//If the request is of type GET
-					if(DebtID in moreInfo){					//Get may or may not have a debt id but if it does then set the debt id attribute of the additional arguments
-						addArgs.DebtID = moreInfo[DebtID];	
+					if(debtID in moreInfo){					//Get may or may not have a debt id but if it does then set the debt id attribute of the additional arguments
+						addArgs.debtID = moreInfo[debtID];	
 					}
 					break;
 				case put: 																							//If the request is of type PUT then it needs three attibutes but has the same suffix as DELETE
@@ -230,7 +163,7 @@ function ParseArgs(where, type, moreInfo){
 					addArgs.borrower = borrower in moreInfo ? moreInfo[borrower] : parseValError(borrower, where);	//Set the borrower attribute of additional arguments
 					//Intentional fallthrough
 				case del:
-					suffix = suffix + '/' + moreInfo[DebtID];	//Set the suffix to also include the debt id attribute
+					suffix = suffix + '/' + moreInfo[debtID];	//Set the suffix to also include the debt id attribute
 					break;
 			}
 			break;
@@ -301,10 +234,10 @@ function parseValError(missingVal, where){
 //This is a dummy variable that helps when testing.
 //	More attributes can easily be added
 var dummyUser = {
-	GroupID: 1,
-	userID: 3,
-	Password: 'abc123',
-	DebtID: 345,
+	group_id: 1,
+	user_id: 3,
+	password: 'abc123',
+	debtid: 345,
 	GroceryID: 3,
 	ChoreID: 7
 };
@@ -319,4 +252,5 @@ var newUser = {
 
 //Test requests
 //request(rent, post);
+//request(users, get, newUser);
 //request(group, post, dummyUser);
