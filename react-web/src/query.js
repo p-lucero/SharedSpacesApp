@@ -37,6 +37,7 @@ const debtType = 'debt_type';
 //Groceries
 const groceryAmountDue = 'amount_due';
 const groceryIsPaid = 'paid_status';
+const item = 'item'; //Not sure if this will always be here
 //Chores
 const choreName = 'chore';
 const dueDate = 'due_date';
@@ -74,6 +75,7 @@ function request(where, type, ...args){
 	});
 }
 
+/*
 function ParseSuffix(where, moreInfo){
 	if(moreInfo == undefined){moreInfo = {}}
 	suffix = '';
@@ -137,7 +139,8 @@ function ParseSuffix(where, moreInfo){
 			break;
 	}
 
-	return(suffix);p}
+	return(suffix);}
+	*/
 
 
 //Parses the relavent information and correctly routes to the correct server call with the information given
@@ -235,16 +238,44 @@ function ParseArgs(where, type, moreInfo){
 		case grocery: 																	//If the request is calling the grocery table on the server
 			if(!(groupID in moreInfo)) {return parseValError(groupID,where)}			//Grocery needs a group id so if there is not on then throw an error
 			suffix = moreInfo[groupID];													//Set the suffix
-			if(GroceryID in moreInfo) {suffix = suffix + '/' + moreInfo[GroceryID];}	//If there is grocery id, then the suffix also includes the grocery
+			if(GroceryID in moreInfo) {													//If there is grocery id, then the suffix also includes the grocery
+				suffix = suffix + '/' + moreInfo[GroceryID];
+				if(type == post) {return ParseValError('GET, PUT, or DELETE ', where)}
+				addArgs.groupID = moreInfo[groupID];
+				addArgs.GroceryID = GroceryID in moreInfo ? moreInfo[GroceryID] : ParseValError(GroceryID, where);
+				addArgs.item = item in moreInfo ? moreInfo[item] : ParseValError(item, where);
+				if(type == put) {
+					addArgs.amount = amount in moreInfo ? moreInfo[amount] : ParseValError(amount, where);
+					addArgs.groceryIsPaid = groceryIsPaid in moreInfo ? moreInfo[groceryIsPaid] : ParseValError(groceryIsPaid, where);
+					addArgs.userID = userID in moreInfo ? moreInfo[userID] : ParseValError(userID, where);
+				}
+				
+			}
+			else {
+				addArgs.groupID = moreInfo[groupID];
+				if(type == post){
+					addArgs.groceryAmountDue = moreInfo[groceryAmountDue];
+					addArgs.groceryIsPaid = moreInfo[groceryIsPaid];
+					addArgs.userID = moreInfo[userID];
+				}
+			}
+
 			break;
 
 		case chores: 															//If the request is calling the chores table on the server
-			if(!(groupID in moreInfo)) {return parseValError(groupID, where)}	//All chore requests require a group id so if there is not one throw an error
+			addArgs.groupID = groupID in choreName ? choreName[GroupID] : ParseValError(groupID, where);	//All chore requests require a group id so if there is not one throw an error
 			if(ChoreID in moreInfo) {											//If there is a chore id then the chore id is used for the suffix in the uri
 				suffix = moreInfo[ChoreID] + '/' + moreInfo[ChoreID];			//Set the suffix to include the chore id
+				addArgs.ChoreID = moreInfo[ChoreID];
 			}
 			else {
 				suffix = moreInfo[groupID];										//Set the suffix without the chore id if one does not exist
+			}
+			if(type == put || type == post){
+				addArgs.choreName = choreName in moreInfo ? moreInfo[choreName] : ParseValError(choreName, where);
+				addArgs.dueDate = dueDate in moreInfo ? moreInfo[dueDate] : ParseValError(dueDate, where);
+				addArgs.choreIsComplete = choreIsComplete in moreInfo ? moreInfo[choreIsComplete] : ParseValError(choreIsComplete, where);
+				addArgs.userID = userID in moreInfo ? moreInfo[userID] : ParseValError(userID, where);
 			}
 			break;
 
