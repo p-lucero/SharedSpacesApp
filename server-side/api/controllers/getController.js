@@ -15,32 +15,32 @@ exports.get_group_info = function(request, response) {
 	var skeleton = "SELECT group_name, id FROM groups WHERE id=?;"
 	var authenticated = true
 	common.perform_query(attributes, placeholders, skeleton, authenticated, {}, function (data, err, task, request, response) {
-	if (err){
-		response.status(400).send(err);
-	}
-	else {
-		data.group_info = task
-		var skeleton = "SELECT * FROM user_accounts WHERE group_id=?;"
-		common.perform_query([], ["groupId"], skeleton, true, data, function (data, err, task, request, response) {
-	if (err){
-		response.status(400).send(err);
-	}
-	else {
-		data.users = task
-		var skeleton = "SELECT * FROM group_debts WHERE group_id=?;"
-		common.perform_query([], ["groupId"], skeleton, true, data, function (data, err, task, request, response) {
-	if (err){
-		response.status(400).send(err);
-	}
-	else {
-		data.debts = task
-		response.json(data);
-	}
-}, request, response)
-	}
-}, request, response)
-	}
-}, request, response)
+		if (err){
+			response.status(400).send(err);
+		}
+		else {
+			data.group_info = task
+			var skeleton = "SELECT * FROM user_accounts WHERE group_id=?;"
+			common.perform_query([], ["groupId"], skeleton, true, data, function (data, err, task, request, response) {
+				if (err){
+					response.status(400).send(err);
+				}
+				else {
+					data.users = task
+					var skeleton = "SELECT * FROM group_debts WHERE group_id=?;"
+					common.perform_query([], ["groupId"], skeleton, true, data, function (data, err, task, request, response) {
+						if (err){
+							response.status(400).send(err);
+						}
+						else {
+							data.debts = task
+							response.json(data);
+						}
+					}, request, response)
+				}
+			}, request, response)
+		}
+	}, request, response)
 };
 
 exports.get_user_info = function(request, response) {
