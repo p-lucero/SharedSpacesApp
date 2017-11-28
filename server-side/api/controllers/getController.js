@@ -24,7 +24,7 @@ exports.get_group_info = function(request, response) {
 		}
 		else {
 			data.group_info = task
-			var skeleton = "SELECT * FROM user_accounts WHERE group_id=?;"
+			var skeleton = "SELECT id, first_name, last_name, email, phone_number, facebook_profile, twitter_handle, instagram, group_id FROM user_accounts WHERE group_id=?;"
 			common.perform_query([], ["groupId"], skeleton, true, data, function (data, err, task, request, response) {
 				if (err){
 					response.status(500).send(err);
@@ -50,7 +50,7 @@ exports.get_group_info = function(request, response) {
 exports.get_user_info = function(request, response) {
 	var attributes = []
 	var placeholders = ["userId"]
-	var skeleton = "SELECT * FROM user_accounts WHERE id=?;"
+	var skeleton = "SELECT id, first_name, last_name, email, phone_number, facebook_profile, twitter_handle, instagram, group_id FROM user_accounts WHERE id=?;"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo){
