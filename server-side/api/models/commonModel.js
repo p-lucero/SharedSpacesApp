@@ -1,11 +1,5 @@
 'use strict';
 
-function ensure_login() {
-	// Checks if the user submitting the query is a valid user and is logged in.
-	// Currently does nothing.
-	return true;
-}
-
 function ensure_attributes(body, desiredAttributes) {
 	for (let attribute of desiredAttributes){
 		if (typeof body[attribute] === "undefined"){
@@ -13,6 +7,11 @@ function ensure_attributes(body, desiredAttributes) {
 		}
 	}
 	return body;
+}
+
+exports.get_email_from_token = function(token) {
+	// returns a user's email from their login token.
+	// if the login token is invalid, returns null.
 }
 
 exports.return_truefalse = function(data, err, task, request, response) { // Returns 200 OK if the request was successful. Returns the error otherwise.
