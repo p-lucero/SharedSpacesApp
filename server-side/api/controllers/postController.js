@@ -14,11 +14,8 @@ exports.create_new_group = function(request, response){
 		authenticated = false
 	}
 	global.pool.query("SELECT group_id FROM user_accounts WHERE id=?", [userInfo.userID], function(err, task){
-		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
-		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (task.length !== 0){
+			request.status(409).send({url: request.originalUrl + " received a request to create a group, but is already in a group"})
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, function (data, err, task, request, response){
