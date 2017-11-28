@@ -130,7 +130,14 @@ exports.update_personal_debt = function(request, response) {
 	if (!userInfo || (userInfo.userID != request.params.lenderID && userInfo.userID != request.params.borrowerID)){
 		authenticated = false
 	}
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+	global.pool.query("SELECT * FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
+		if (task.length === 0){
+			request.status(404).send({url: request.originalUrl + " not found"})
+		}
+		else {
+			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+		}
+	})
 };
 
 exports.update_grocery_item = function(request, response) {
@@ -186,5 +193,15 @@ exports.update_rent_info = function(request, response) {
 	if (!userInfo || userInfo.groupID != request.params.groupId){
 		authenticated = false
 	}
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+	global.pool.query("SELECT * FROM rent WHERE group_id=?", [request.params.groupId], function(err, task){
+		if (task.length === 0){
+			request.status(404).send({url: request.originalUrl + " not found"})
+		}
+		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+			authenticated = false
+		}
+		else {
+			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+		}
+	})
 };
