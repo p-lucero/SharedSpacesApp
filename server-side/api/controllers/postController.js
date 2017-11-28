@@ -1,6 +1,7 @@
 'use strict';
 
 var common = require('../models/commonModel.js');
+const validator = require('validator')
 
 exports.create_new_group = function(request, response){
 	var attributes = ["groupName"]
@@ -17,19 +18,30 @@ exports.create_new_group = function(request, response){
 }, request, response)
 };
 
-exports.create_new_user = function(request, response) { // FIXME this should probably check if a user with that email is already in the database and refuse to create if so
+exports.create_new_user = function(request, response) {
 	var attributes = ["first", "last", "email", "password", "phoneNumber"]
 	var placeholders = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID"]
 	var skeleton = "INSERT INTO user_accounts (first_name, last_name, email, password, phone_number, facebook_profile, twitter_handle, instagram, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
-	var specificAuth = true // this doesn't need to be fixed; anyone should be able to create user accounts without any specific authentication
-	common.perform_query(attributes, placeholders, skeleton, specificAuth, null, function (data, err, task, request, response){
-	if (err){
-		response.status(400).send(err);
+	if (!validator.isEmail(request.body.email + '')) { // ensure we don't throw an error on passing in a null into validator; also catches nulls properly
+		response.status(400).send({url: request.originalUrl + " received a request to create an account, but the email address was invalid"}) // reject non-email emails
 	}
 	else {
-		common.perform_query(["email"], ["email"], "SELECT id from user_accounts WHERE email=?;", true, null, null, request, response)
+		global.pool.query("SELECT * FROM user_accounts WHERE email=?", [request.body.email], function(err, task) {
+			if (task.length > 0){
+				response.status(409).send({url: request.originalUrl + " received a request to create an account for an email that is already registered"})
+			}
+			else {
+				common.perform_query(attributes, placeholders, skeleton, true, null, function (data, err, task, request, response){
+					if (err){
+						response.status(400).send(err);
+					}
+					else {
+						common.perform_query(["email"], ["email"], "SELECT id from user_accounts WHERE email=?;", true, null, null, request, response)
+					}
+				}, request, response)
+			}
+		});
 	}
-}, request, response)
 };
 
 exports.create_group_debt = function(request, response) {
