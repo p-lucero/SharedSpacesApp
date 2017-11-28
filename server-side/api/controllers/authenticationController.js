@@ -40,10 +40,10 @@ exports.login = function(request, response){
 								global.loginCache.push({email:email, loginTokens:[token]}) // scales very poorly but who cares
 							}
 							if (stayLoggedIn){
-								setTimeout(forceLogout, 1000 * 60 * 60 * 24 * 30) // login expires in a month
+								setTimeout(forceLogout, 1000 * 60 * 60 * 24 * 30, token) // login expires in a month
 							}
 							else {
-								setTimeout(forceLogout, 1000 * 60 * 60 * 24) // login expires in a day
+								setTimeout(forceLogout, 1000 * 60 * 60 * 24, token) // login expires in a day
 							}
 						}
 						else {
