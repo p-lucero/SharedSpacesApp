@@ -23,16 +23,24 @@ exports.create_new_group = function(request, response){
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, function (data, err, task, request, response){
 				if (err){
-					response.status(400).send(err);
+					response.status(500).send(err);
 				}
 				else {
 					common.perform_query(["groupName"], ["groupName"], "SELECT id FROM groups WHERE group_name=?;", true, null, function (data, err, task, request, response) {
 						if (err){
-							response.status(400).send(err);
+							response.status(500).send(err);
 						}
 						else {
-							global.pool.query("UPDATE user_accounts SET group_id=? WHERE email=?", [task[0].id, userInfo.email])
-							response.json(task)
+							global.pool.query("UPDATE user_accounts SET group_id=? WHERE email=?", [task[0].id, userInfo.email], function (err, task){
+								if (err){
+									if (!response.headersSent){
+										response.status(500).send(err);
+									}
+								}
+							})
+							if (!response.headersSent){
+								response.json(task)
+							}
 						}
 					}, request, response)
 				}
@@ -56,7 +64,7 @@ exports.create_new_user = function(request, response) {
 			else {
 				common.perform_query(attributes, placeholders, skeleton, true, null, function (data, err, task, request, response){
 					if (err){
-						response.status(400).send(err);
+						response.status(500).send(err);
 					}
 					else {
 						auth.login(request, response) // now that the user's created an account, give them a login token for said new account

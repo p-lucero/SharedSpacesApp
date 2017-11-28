@@ -70,7 +70,7 @@ exports.perform_query = function(attributes, placeholders, skeleton, authenticat
 			else {
 				global.pool.query(skeleton, parameters, function(err, task) {
 					if (err) {
-						response.status(400).send(err); // This must be interpreted by the client. Make a way to do this in the UI!
+						response.status(500).send(err); // This must be interpreted by the client. Make a way to do this in the UI!
 					}
 					else {
 						response.json(task); // Return the responses of the SQL query to the client to be interpreted and pretty-printed by the React UI

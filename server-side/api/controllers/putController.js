@@ -14,15 +14,67 @@ exports.update_group_info = function(request, response) {
 	for the latter:
 	UPDATE users SET group_id=? WHERE id=? OR id=?... as needed
 	structure of users in submission is as yet unknown */
-	var attributes = []
-	var placeholders = []
-	var skeleton = "SELECT 1;"
+	var attributes = ["groupName", "groundRules", "users"]
+	var placeholders = ["groupName", "groundRules", "groupId"]
+	var skeleton = "UPDATE groups SET group_name=?, ground_rules=? WHERE id=?"
 	var userInfo = common.get_info_from_token(token)
 	var authenticated = true
-	if (!userInfo){
+	if (!userInfo || userInfo.groupID != request.params.groupId){
 		authenticated = false
 	}
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+	common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
+			if (err){
+				response.status(500).send(err)
+			}
+			else {
+				common.perform_query([], ["groupId"], "SELECT id FROM users WHERE group_id=?", authenticated, null, function(data, err, task, request, response) {
+					let toBeCleared = []
+					let toBeUpdated = []
+					let inGroupUsers = []
+					let inUpdateUsers = request.body.users
+					for (let i = 0; i < task.length; i++){
+						inGroupUsers.push(task[i].id)
+					}
+					let allUsers = [...new Set([...inUpdateUsers, ...inGroupUsers])]
+					for (let user of allUsers){
+						if (inGroupUsers.indexOf(user) > -1 && !inUpdateUsers.indexOf(user) > -1){
+							toBeCleared.push(user)
+						}
+						else if (!inGroupUsers.indexOf(user) > -1 && inUpdateUsers.indexOf(user) > -1){
+							toBeUpdated.push(user)
+						}
+					}
+					if (toBeCleared.length > 0){
+						let skeleton = "UPDATE users SET group_id=null WHERE id=?"
+						for (let i = 1; i < toBeCleared.length; i++){
+							skeleton += " OR id=?"
+						}
+						global.pool.query(skeleton, toBeCleared, function(err, task){
+							if (err){
+								response.status(500).send(err)
+							}
+						})
+					}
+					if (toBeUpdated.length > 0){
+						toBeUpdated.unshift(request.params.groupId)
+						let skeleton = "UPDATE users SET group_id=null WHERE id=?"
+						for (let j = 1; j < toBeCleared.length; j++){
+							skeleton += " OR id=?"
+						}
+						global.pool.query(skeleton, toBeCleared, function(err, task){
+							if (err){
+								response.status(500).send(err)
+							}
+						})
+					}
+					if (!response.headersSent){
+						response.json(200)
+					}
+				}
+				, request, response)
+			}
+		}
+	, request, response)
 };
 
 exports.update_user_info = function(request, response) {
