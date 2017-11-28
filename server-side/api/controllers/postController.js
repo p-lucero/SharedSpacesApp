@@ -1,6 +1,7 @@
 'use strict';
 
 var common = require('../models/commonModel.js');
+var auth = require('authenticationController.js');
 const validator = require('validator')
 
 exports.create_new_group = function(request, response){
@@ -58,7 +59,7 @@ exports.create_new_user = function(request, response) {
 						response.status(400).send(err);
 					}
 					else {
-						common.perform_query(["email"], ["email"], "SELECT id from user_accounts WHERE email=?;", true, null, null, request, response)
+						auth.login(request, response) // now that the user's created an account, give them a login token for said new account
 					}
 				}, request, response)
 			}
