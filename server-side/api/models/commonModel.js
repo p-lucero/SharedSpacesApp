@@ -9,9 +9,13 @@ function ensure_attributes(body, desiredAttributes) {
 	return body;
 }
 
-exports.get_email_from_token = function(token) {
-	// returns a user's email from their login token.
-	// if the login token is invalid, returns null.
+exports.get_info_from_token = function(token) {
+	for (let cachedLogin of global.loginCache) {
+		if (cachedLogin.loginTokens.indexOf(token) > -1){
+			return cachedLogin
+		}
+	}
+	return null
 }
 
 exports.return_truefalse = function(data, err, task, request, response) { // Returns 200 OK if the request was successful. Returns the error otherwise.
@@ -29,29 +33,22 @@ Parameters are as follows:
 	attributes is the array of strings containing all required attributes that the request body should have.
 	placeholders is the array of strings (or regexps) which will be used in doing parameter substitution later on.
 	skeleton is the query skeleton to be used in parameter substitution later.
-	specificAuth is a boolean value indicating whether the authentication checks in the caller passed.
+	authenticated is a boolean value indicating whether the authentication checks in the caller passed.
 	data is an object containing any data from prior queries, if applicable. Optional, should be null if the operation can be done in one query.
 	callback is a callback function which will be called if it exists. Used for when multiple queries are needed. Optional, should be null in same case as above.
 	request is the built-in request object that the user sent us.
 	response is the object which deals with how we're going to reply to the user.
 */
 
-exports.perform_query = function(attributes, placeholders, skeleton, specificAuth, data, callback, request, response) {
-	var parameters = [] 
-	var commonAuth = ensure_login()
-	if (skeleton.includes("INSERT INTO user_accounts")) {
-		commonAuth = true // hack to ensure that a user account can always be created
-	}
-	var authenticated = commonAuth && specificAuth
+exports.perform_query = function(attributes, placeholders, skeleton, authenticated, data, callback, request, response) {
+	var parameters = []
 	if (!authenticated){
 		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
-		return true;
 	}
 	else {
 		var body = ensure_attributes(request.body, attributes)
 		if (!body){
 			response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
-			return true;
 		}
 		else {
 			for (let param in request.params) { // move anything that was specified in the URL to the request body
