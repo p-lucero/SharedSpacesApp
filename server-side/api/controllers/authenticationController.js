@@ -21,7 +21,7 @@ exports.login = function(request, response){
 		if (!alreadyLoggedIn) {
 			global.pool.query("SELECT * FROM users WHERE email = ?", [email], function(err, task) { // check if the user gave us valid login credentials
 				if (err){
-					response.status(400).send(err)
+					response.status(500).send(err)
 				}
 				else {
 					if (task.length > 0){
