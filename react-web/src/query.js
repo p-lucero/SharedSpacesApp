@@ -12,6 +12,8 @@ const PASS = 'Password';
 const DID = 'debt_id';
 const GroceryID = 'GroceryID';
 const CID = 'ChoreID';
+//*************************************************************************************
+var err = 0;
 //Attributes for additionial arguments
 //General
 const PrimaryID = 'PRIMARY';	//All for referencing self id
@@ -31,7 +33,7 @@ const password = 'password';
 const phoneNumber = 'phone_number';
 const facebook = 'facebook_profile';
 const twitter = 'twitter_handle';
-const instagram = 'instagram';1 
+const instagram = 'instagram';
 //GroupDebt
 const debtType = 'debt_type';
 const debtID = 'debt_id';
@@ -64,7 +66,8 @@ function request(where, type, ...args){
 												//	Additional arguments (addArgs) is from an object that is passed with the relavent information, the parseArgs 
 												//	function will ensure that all of the relavent information is there and will alert if all of it is not there 
 	addArgs = ending.addArgs;					//The object argument in request does not allow dot notation so it requires its own object
-
+	console.log(ending);
+	if(err){return({errors: err}, console.log('ERRORS: ' + err));}
 	//Request the server with a calling type (ie. GET, POST, etc), call the correct url with a valid location with the parsed arguments.
 	//With the parsed information it will return an object with the relavent information that should be within the response object 
 	//but right now it simply prints the result
@@ -81,16 +84,15 @@ function ParseArgs(where, type, moreInfo){
 	if(moreInfo == undefined){moreInfo = {}};	//If there is not another object passed to the request function then create an empty one
 	addArgs = {};								//Initialize the additional arguments object
 	suffix = '';								//Initialize the suffix
+	err = 0;
 
 	switch(where) {								//Switch through the table in the server the request is calling upon
-		case group: 																	//If the request is calling on the groups table in the server
-			if(type == post){															//If the type is of a POST then no group id is required in the suffix
-				if (!(groupID in moreInfo)){return parseValError(groupID, where)}				//Ensure there is a group id
-				suffix = moreInfo[groupID];													//Set the suffix
-				addArgs.groupName = groupName in moreInfo ? moreInfo(groupName) : '';	//Set a group name if one if provided, if not set it as an empty string
-			}																			//
-			else{																		//If the request is not of type POST
-				addArgs.groupID = groupID in moreInfo ? moreInfo[groupID] : parseValError(groupID, where);//Set the group id in additional arguments since all GET, PUT, and DELETE require a group id 
+		case group:								//If the request is calling on the groups table in the server
+			if(type == post){
+				addArgs.groupName = groupName in moreInfo ? moreInfo[groupName] : '';
+			}
+			else{
+				suffix = groupID in moreInfo ? moreInfo[groupID] : parseValError(groupID, where);
 				if(type == put){														//
 					addArgs.groupName = moreInfo[groupName];							//Set the group name in additional arguments
 					//addArgs.users = moreInfo(users);		//Who is in the group 		//We may need to keep track of the users in a group so this is in such a case
@@ -102,7 +104,7 @@ function ParseArgs(where, type, moreInfo){
 		case users: 									//If the request is calling the users table on the server
 			switch(type){								//Switch the type of request, there is more needed in this request than in groups so more is needed
 				case put: 								//If the type of request is PUT. The only difference between PUT and POST is that PUT needs a suffix and user id
-					suffix = moreInfo[UID];				//Set the suffix
+					suffix = moreInfo[userID];				//Set the suffix
 					addArgs.userID = moreInfo[userID];	//Set the user id
 					//Intentional fallthrough
 				case post: 								//If the request is of type POST then set all of the relavent user info. Requred information is labeled
@@ -110,16 +112,16 @@ function ParseArgs(where, type, moreInfo){
 					addArgs.last = last in moreInfo ? moreInfo[last] : parseValError(last, where);					//Last name is required
 					addArgs.email =  first in moreInfo ? moreInfo[email] : addArgs.email = '';
 					addArgs.password =  password in moreInfo ? moreInfo[password] : parseValError(password, where);	//password is required
-					addArgs.phoneNumber = phoneNumber in moreInfo ? moreInfo[phoneNumber] : addArgs.email = '';
+					addArgs.phoneNumber = phoneNumber in moreInfo ? moreInfo[phoneNumber] : addArgs.email = 0;
 					addArgs.facebook = facebook in moreInfo ? moreInfo[facebook] : addArgs.facebook = '';
 					addArgs.twitter = twitter in moreInfo ? moreInfo[twitter] : addArgs.twitter = '';
 					addArgs.instagram = instagram in moreInfo ? moreInfo[instagram] : addArgs.instagram = '';
-					addArgs.groupID =  groupID in moreInfo ? moreInfo[groupID] : addArgs.groupID = '';
+					addArgs.groupID =  groupID in moreInfo ? moreInfo[groupID] : addArgs.groupID = -1;
 					break;
 				case get: 								//GET and DELETE have the same suffix and additional argument requirements
 					//Intentional fallthrough
 				case del:
-					suffix = moreInfo[UID];				//Set the suffix
+					suffix = moreInfo[userID];				//Set the suffix
 					addArgs.userID = moreInfo[userID];	//Set the user id in additional arguments
 					break;
 			}
@@ -214,7 +216,7 @@ function ParseArgs(where, type, moreInfo){
 
 		case rent: 																				//If the request is calling the rent table on the server
 			suffix = groupID in moreInfo ? moreInfo[groupID] : parseValError(groupID, where);	//Set the suffix to the group id if one exists, if one does not exist throw an error
-			addArgs.groupID = moreInfo[groupID];												//Also add the group id as one of the attibutes in additional arguments
+			addArgs.groupID = groupID in moreInfo ? moreInfo[groupID] : parseValError(groupID, where);												//Also add the group id as one of the attibutes in additional arguments
 			if(type != get){
 				addArgs.amount = amount in moreInfo ? moreInfo[amount] : parseValError(amount, where);					//Set the amount attribute of additional arguments
 				addArgs.rentIsPaid = rentIsPaid in moreInfo ? moreInfo[rentIsPaid] : parseValError(rentIsPaid, where);	//Set the lender attribute of additional arguments
@@ -229,21 +231,25 @@ function ParseArgs(where, type, moreInfo){
 //This function returns an error describing the missing object in the request
 function parseValError(missingVal, where){
 	console.log('ERROR: missing ' + missingVal + ' when referencing ' + where); //A simple console log
+	err++;
+	return(-1);
 }
 
 //This is a dummy variable that helps when testing.
 //	More attributes can easily be added
 var dummyUser = {
 	group_id: 1,
-	user_id: 3,
+	user_id: 0,
 	password: 'abc123',
 	debtid: 345,
 	GroceryID: 3,
-	ChoreID: 7
+	ChoreID: 7,
+	group_name: 'TestGroup'
 };
 
 //A second dummy user to test the new user request
 var newUser = {
+	user_id: 18,
 	first_name: 'Dann',
 	last_name: 'Parache',
 	email: 'dann.parache@gmail.com',
@@ -252,5 +258,6 @@ var newUser = {
 
 //Test requests
 //request(rent, post);
+//request(users, post, newUser);
 //request(users, get, newUser);
-//request(group, post, dummyUser);
+//request(rent, get, dummyUser);
