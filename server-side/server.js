@@ -2,21 +2,18 @@ var express = require('express'),
   app = express(),
   port = process.env.PORT || 3001,
   mysql = require('mysql'),
-  Task = require('./api/models/serverModel'),
   bodyParser = require('body-parser');
 
 
-global.con = mysql.createConnection({
+global.pool = mysql.createPool({
+	connectionLimit: 10,
 	host: 'localhost',
 	user: 'root',
 	database: 'deployment',
 	insecureAuth: true
 });
 
-con.connect(function(err){
-	if (err) throw err;
-	console.log("Connected!");
-});
+global.loginCache = []
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

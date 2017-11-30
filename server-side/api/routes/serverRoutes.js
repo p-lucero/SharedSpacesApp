@@ -4,6 +4,10 @@ module.exports = function(app) {
 	var putController = require('../controllers/putController.js');
 	var postController = require('../controllers/postController.js');
 	var deleteController = require('../controllers/deleteController.js');
+	var authenticationController = require('../controllers/authenticationController.js')
+
+	app.route('/api/dummy') // THIS IS A DUMMY ENDPOINT FOR TESTING PURPOSES ONLY. **DO NOT USE ME IN PRODUCTION CODE**
+		.get(getController.dummy_function)
 
 	app.route('/api/groups') // deals with all groups or groups in the making
 		.post(postController.create_new_group)
@@ -21,6 +25,12 @@ module.exports = function(app) {
 		.put(putController.update_user_info)
 		.delete(deleteController.delete_user)
 
+	app.route('/api/users/login')
+		.post(authenticationController.login)
+
+	app.route('/api/users/logout')
+		.post(authenticationController.logout)
+
 	app.route('/api/groupDebts/:groupId')
 		.get(getController.get_group_debt_list)
 		.post(postController.create_group_debt)
@@ -34,7 +44,7 @@ module.exports = function(app) {
 		.post(postController.create_new_personal_debt)
 
 	app.route('/api/personalDebts/:userId')
-		.get(getController.list_personal_debts)
+		.get(getController.get_personal_debt_list)
 
 	app.route('/api/personalDebts/:userId/:debtId')
 		.get(getController.get_personal_debt_info)
@@ -43,7 +53,6 @@ module.exports = function(app) {
 
 	app.route('/api/groceries/:groupId')
 		.get(getController.get_grocery_list)
-		.put(putController.update_grocery_list)
 		.post(postController.create_new_grocery_item)
 		.delete(deleteController.delete_grocery_list)
 
@@ -54,7 +63,6 @@ module.exports = function(app) {
 
 	app.route('/api/chores/:groupId')
 		.get(getController.get_chores_list)
-		.put(putController.update_chores_list)
 		.post(postController.create_new_chore)
 		.delete(deleteController.delete_chores_list)
 

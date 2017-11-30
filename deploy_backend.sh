@@ -3,4 +3,7 @@
 cd /srv/SharedSpacesDeployment/github-building/server-side
 git pull
 cp -a /srv/SharedSpacesDeployment/github-building/server-side/. /srv/SharedSpacesDeployment/server
-sudo cp nginx.conf /etc/nginx/sites-available/tutorial
+if ! cmp nginx.conf /etc/nginx/sites-available/tutorial >/dev/null 2>&1; then
+	sudo cp nginx.conf /etc/nginx/sites-available/tutorial
+	sudo service nginx restart
+fi
