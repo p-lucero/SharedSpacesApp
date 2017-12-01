@@ -37,7 +37,7 @@ exports.login = function(request, response){
 								}
 							}
 							if (!cached){
-								global.loginCache.push({email:email, loginTokens:[], userID:task[0].group_id, userID:task[0].id}) // scales very poorly but who cares
+								global.loginCache.push({email:email, loginTokens:[token], groupID:task[0].group_id, userID:task[0].id}) // scales very poorly but who cares
 							}
 							if (stayLoggedIn == "true"){
 								setTimeout(forceLogout, 1000 * 60 * 60 * 24 * 30, token) // login expires in a month
@@ -68,11 +68,11 @@ exports.logout = function(request, response){
 	else {
 		let idx = userInfo.loginTokens.indexOf(request.body.token)
 		if (idx > -1){
-			cachedLogin.splice(idx, 1)
+			userInfo.loginTokens.splice(idx, 1)
 			response.status(200).send({"success":"successfully logged out"})
 		}
-		if (cachedLogin.loginTokens.length === 0){
-			global.loginCache.splice(global.loginCache.indexOf(cachedLogin), 1)
+		if (userInfo.loginTokens.length === 0){
+			global.loginCache.splice(global.loginCache.indexOf(userInfo), 1)
 		}
 	}
 }
