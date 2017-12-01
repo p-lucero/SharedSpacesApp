@@ -25,7 +25,8 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="SharedSpaces"></activity>
+            android:label="SharedSpaces" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>
