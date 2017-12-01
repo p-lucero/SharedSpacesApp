@@ -6,7 +6,7 @@ exports.login = function(request, response){
 	var email = request.body.email
 	var password = request.body.password
 	var stayLoggedIn = request.body.stayLoggedIn
-	if (typeof email === "undefined" or typeof password === "undefined" or (stayLoggedIn != "true" and stayLoggedIn != "false")){
+	if (typeof email === "undefined" || typeof password === "undefined" || (stayLoggedIn != "true" && stayLoggedIn != "false")){
 		response.status(400).send({url: request.originalUrl + " received a badly formatted request"}) // validate parameters
 	}
 	else {

@@ -1,7 +1,7 @@
 'use strict';
 
 var common = require('../models/commonModel.js');
-var auth = require('authenticationController.js');
+var auth = require('./authenticationController.js');
 const validator = require('validator')
 
 exports.create_new_group = function(request, response){
