@@ -1,4 +1,4 @@
-	'use strict';
+'use strict';
 
 const uuidv4 = require('uuid/v4')
 
@@ -6,20 +6,20 @@ exports.login = function(request, response){
 	var email = request.body.email
 	var password = request.body.password
 	var stayLoggedIn = request.body.stayLoggedIn
-	if (typeof email === "undefined" || typeof password === "undefined" || (stayLoggedIn != "true" && stayLoggedIn != "false")){
+	if (typeof email === "undefined" || typeof password === "undefined" || (stayLoggedIn != true && stayLoggedIn != false && stayLoggedIn != "true" && stayLoggedIn != "false")){
 		response.status(400).send({url: request.originalUrl + " received a badly formatted request"}) // validate parameters
 	}
 	else {
 		let alreadyLoggedIn = false;
 		for (let cachedLogin of global.loginCache) { // check if user's already logged in
 			if (cachedLogin.loginTokens.indexOf(request.body.token) > -1) { // will fail anyways if the user has no login token, which is fine
-				response.status(200).send({"success":"login successful", "token":token});
+				response.status(200).send({"success":"login successful", "token":request.body.token});
 				alreadyLoggedIn = true
 				break
 			}
 		}
 		if (!alreadyLoggedIn) {
-			global.pool.query("SELECT * FROM users WHERE email = ?", [email], function(err, task) { // check if the user gave us valid login credentials
+			global.pool.query("SELECT * FROM user_accounts WHERE email = ?", [email], function(err, task) { // check if the user gave us valid login credentials
 				if (err){
 					response.status(500).send(err)
 				}
@@ -27,7 +27,7 @@ exports.login = function(request, response){
 					if (task.length > 0){
 						if (task[0].password == password){
 							let token = uuidv4() // generate token
-							response.status(200).send({"success":"login successful", "token":token});
+							response.status(200).send({"success":"login successful", "token":token, "user_id":task[0].id});
 							var cached = false
 							for (let cachedLogin of global.loginCache) { // if user has no login thingies, create one for them
 								if (cachedLogin.email === email) {
@@ -37,7 +37,7 @@ exports.login = function(request, response){
 								}
 							}
 							if (!cached){
-								global.loginCache.push({email:email, loginTokens:[token], userID:task[0].group_id, userID:task[0].id}) // scales very poorly but who cares
+								global.loginCache.push({email:email, loginTokens:[], userID:task[0].group_id, userID:task[0].id}) // scales very poorly but who cares
 							}
 							if (stayLoggedIn == "true"){
 								setTimeout(forceLogout, 1000 * 60 * 60 * 24 * 30, token) // login expires in a month
@@ -60,37 +60,28 @@ exports.login = function(request, response){
 }
 
 exports.logout = function(request, response){
-	var token = request.body.token
-	if (typeof token === "undefined"){
+	var userInfo = common.get_info_from_token(request.body.token)
+	var email = userInfo.email
+	if (typeof token === "undefined" || !userInfo){
 		response.status(400).send({url: request.originalUrl + " received a badly formatted request"}) // validate parameters
 	}
-	let isLoggedInSomewhere = false;
-	for (let cachedLogin of global.loginCache){
-		if (cachedLogin.email === email) {
-			isLoggedInSomewhere = true;
-			let idx = cachedLogin.loginTokens.indexOf(request.body.token)
-			if (idx > -1){
-				cachedLogin.splice(idx, 1)
-				response.status(200).send({"success":"successfully logged out"})
-			}
-			else {
-				response.status(401).send({url: request.originalUrl + " received a logout request from a user that is not logged in on this device"})
-			}
-			if (cachedLogin.loginTokens.length === 0){
-				global.loginCache.splice(global.loginCache.indexOf(cachedLogin), 1)
-			}
+	else {
+		let idx = userInfo.loginTokens.indexOf(request.body.token)
+		if (idx > -1){
+			cachedLogin.splice(idx, 1)
+			response.status(200).send({"success":"successfully logged out"})
 		}
-	}
-	if (!isLoggedInSomewhere) {
-		response.status(401).send({url: request.originalUrl + " received a logout request from a user that is not logged in on this device"})
+		if (cachedLogin.loginTokens.length === 0){
+			global.loginCache.splice(global.loginCache.indexOf(cachedLogin), 1)
+		}
 	}
 }
 
 function forceLogout(token) {
 	for (let cachedLogin of global.loginCache){
-		let idx = cachedLogin.loginTokens.indexOf(request.body.token)
+		let idx = cachedLogin.loginTokens.indexOf(token)
 		if (idx > -1){
-			cachedLogin.splice(idx, 1)
+			cachedLogin.loginTokens.splice(idx, 1)
 		}
 		if (cachedLogin.loginTokens.length === 0){
 			global.loginCache.splice(global.loginCache.indexOf(cachedLogin), 1)

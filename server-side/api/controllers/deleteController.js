@@ -17,7 +17,7 @@ exports.delete_group = function(request, response) {
 exports.delete_user = function(request, response) {
 	var attributes = [] 
 	var placeholders = ["userId"] 
-	var skeleton = "DELETE FROM users WHERE id=?;"
+	var skeleton = "DELETE FROM user_accounts WHERE id=?;"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true;
 	if (!userInfo || userInfo.userID != request.params.userId){

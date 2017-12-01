@@ -47,6 +47,7 @@ exports.create_new_group = function(request, response){
 };
 
 exports.create_new_user = function(request, response) {
+	request.body.stayLoggedIn = true
 	var attributes = ["first", "last", "email", "password", "phoneNumber"]
 	var placeholders = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID"]
 	var skeleton = "INSERT INTO user_accounts (first_name, last_name, email, password, phone_number, facebook_profile, twitter_handle, instagram, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"

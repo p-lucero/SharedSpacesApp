@@ -25,10 +25,10 @@ module.exports = function(app) {
 		.put(putController.update_user_info)
 		.delete(deleteController.delete_user)
 
-	app.route('/api/users/login')
+	app.route('/api/login')
 		.post(authenticationController.login)
 
-	app.route('/api/users/logout')
+	app.route('/api/logout')
 		.post(authenticationController.logout)
 
 	app.route('/api/groupDebts/:groupId')
