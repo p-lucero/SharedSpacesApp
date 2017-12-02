@@ -26,7 +26,8 @@
         <activity
             android:name=".HomeActivity"
             android:label="SharedSpaces" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".GroceryList"></activity>
     </application>
 
 </manifest>
