@@ -1,15 +1,22 @@
-var expect  = require('chai').expect;
-var request = require('request');
+var chai  = require('chai');
+var chaiHttp = require('chai-http');
+var server = require('../server');
+var expect = chai.expect;
+
+chai.use(chaiHttp);
+
+process.env.DATABASE = 'test';
+process.env.PORT = 3002;
 
 // http://chaijs.com/api/bdd/ contains the documentation for how things work here
 
 var dummyUser = {
-	id: 999,
-	first_name: 'Test',
-	last_name: 'User',
-	email: 'test.user@gmail.com',
-	password: 'foo',
-	phone_number: 1111111111
+	id: 1,
+	first_name: 'Kyle',
+	last_name: 'McDevitt',
+	email: 'jd@gmail.com',
+	password: 'password',
+	phone_number: 9876543210
 }
 
 var badUser = {
