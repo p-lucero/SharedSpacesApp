@@ -14,7 +14,7 @@ var dummyUser = {
 	id: 1,
 	first_name: 'Kyle',
 	last_name: 'McDevitt',
-	email: 'jd@gmail.com',
+	email: 'kyle@gmail.com',
 	password: 'password',
 	phone_number: 9876543210
 }
