@@ -1,6 +1,6 @@
 var express = require('express'),
   app = express(),
-  port = process.env.PORT || 3001,
+  port = process.env.PORT || 3001, // allow for using the test port
   mysql = require('mysql'),
   bodyParser = require('body-parser');
 
@@ -9,7 +9,7 @@ global.pool = mysql.createPool({
 	connectionLimit: 10,
 	host: 'localhost',
 	user: 'root',
-	database: 'deployment',
+	database: process.env.DATABASE || 'deployment', // allow for using the test database
 	insecureAuth: true
 });
 
