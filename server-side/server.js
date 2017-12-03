@@ -28,14 +28,3 @@ app.use(function(req, res) {
 app.listen(port);
 
 console.log('Shared Spaces server processor started on ' + port);
-
-console.log(app._router.stack)
-for (let i = 0; i < app._router.stack.length; i++){
-	try {
-		console.log(app._router.stack[0])
-		console.log()
-	}
-	catch (e) {
-		console.log('fuck')
-	}
-}
