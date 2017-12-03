@@ -29,6 +29,13 @@ var badUser = {
 }
 
 describe('The post endpoints', function(){
+	before(function(done){
+		execsql.config(dbConfig).exec(selectDB).execFile(sqlFile, function(err, results){
+			if (err) throw err;
+			console.log(results);
+			done()
+		}).end();
+	})
 	describe('Create group', function(){
 		it('Exists', function(done){
 

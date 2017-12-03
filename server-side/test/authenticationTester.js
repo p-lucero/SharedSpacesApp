@@ -4,9 +4,18 @@ process.env.PORT = 3002;
 var chai  = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../server');
+var execsql = require('execsql');
 var expect = chai.expect;
 
 chai.use(chaiHttp);
+
+var dbConfig = {
+	host: 'localhost',
+	user: 'root',
+	insecureAuth: true
+}
+var selectDB = `use ${process.env.DATABASE};`
+var sqlFile = __dirname + '/../testing_db_data.sql'
 
 // http://chaijs.com/api/bdd/ contains the documentation for how things work here
 
@@ -29,6 +38,13 @@ var badUser = {
 }
 
 describe('Authentication controller', function() {
+	before(function(done){
+		execsql.config(dbConfig).exec(selectDB).execFile(sqlFile, function(err, results){
+			if (err) throw err;
+			console.log(results);
+			done()
+		}).end();
+	})
 	it('Rejects content-free requests', function(done){
 
 	})
