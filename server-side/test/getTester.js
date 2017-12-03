@@ -1,12 +1,12 @@
+process.env.DATABASE = 'test';
+process.env.PORT = 3002;
+
 var chai  = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../server');
 var expect = chai.expect;
 
 chai.use(chaiHttp);
-
-process.env.DATABASE = 'test';
-process.env.PORT = 3002;
 
 // http://chaijs.com/api/bdd/ contains the documentation for how things work here
 
