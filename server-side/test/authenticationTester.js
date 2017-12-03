@@ -8,8 +8,6 @@ var execsql = require('execsql');
 var expect = chai.expect;
 const uuidv4 = require('uuid/v4')
 
-// console.log(server)
-
 chai.use(chaiHttp);
 
 var dbConfig = {
