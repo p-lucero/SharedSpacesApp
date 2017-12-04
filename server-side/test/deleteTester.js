@@ -20,6 +20,39 @@ var dbConfig = {
 var selectDB = `use ${process.env.DATABASE};`
 var sqlFile = __dirname + '/../testing_db_data.sql'
 
+var endpoints = [{
+	name: 'Delete group debt',
+	uri: '/api/groupDebts/1/1'
+},
+{
+	name: 'Delete personal debt',
+	uri: '/api/personalDebts/1/1'
+},
+{
+	name: 'Delete grocery item',
+	uri: '/api/groceries/1/1'
+},
+{
+	name: 'Delete grocery list',
+	uri: '/api/groceries/1'
+},
+{
+	name: 'Delete chore item',
+	uri: '/api/chores/1/1'
+},
+{
+	name: 'Delete chores list',
+	uri: '/api/chores/1',
+},
+{
+	name: 'Delete group', 
+	uri: '/api/groups/1'
+},
+{
+	name: 'Delete user',
+	uri: '/api/users/1'
+}]
+
 // http://chaijs.com/api/bdd/ contains the documentation for how things work here
 
 var dummyUser = {
@@ -85,10 +118,11 @@ describe('The delete endpoints', function(){
 		expect(retcode).to.not.equal(500);
 		expect(retcode).to.not.equal(502);
 	})
-	describe('Delete group debt', function(){
+	endpoints.forEach(function(endpoint){
+		describe(endpoint.name, function(){
 		it('Rejects empty requests', function(done){
 			chai.request(app)
-				.delete('/api/groupDebts/1/1')
+				.delete(endpoint.uri)
 				.end((err, res) => {
 					retcode = res.status
 					expect(res.status).to.equal(401)
@@ -97,7 +131,7 @@ describe('The delete endpoints', function(){
 		})
 		it('Forbids a user from deleting things that they are unrelated to', function(done){
 			chai.request(app)
-				.delete('/api/groupDebts/1/1')
+				.delete(endpoint.uri)
 				.send(lUser)
 				.end((err, res) => {
 					retcode = res.status
@@ -107,168 +141,14 @@ describe('The delete endpoints', function(){
 		})
 		it('Allows an authorized user to perform deletes', function(done){
 			chai.request(app)
-				.delete('/api/groupDebts/1/1')
+				.delete(endpoint.uri)
 				.send(dummyUser)
 				.end((err, res) => {
 					retcode = res.status
 					expect(res.status).to.equal(200)
 					done()
 				})
-		})
-	})
-	describe('Delete personal debt', function(){
-		it('Rejects empty requests', function(done){
-			chai.request(app)
-				.delete('/api/personalDebts/1/1')
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Forbids a user from deleting things that they are unrelated to', function(done){
-			chai.request(app)
-				.delete('/api/personalDebts/1/1')
-				.send(lUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Allows an authorized user to perform deletes', function(done){
-			chai.request(app)
-				.delete('/api/personalDebts/1/1')
-				.send(dummyUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(200)
-					done()
-				})
-		})
-	})
-	describe('Delete grocery item', function(){
-		it('Rejects empty requests', function(done){
-			chai.request(app)
-				.delete('/api/groceries/1/1')
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Forbids a user from deleting things that they are unrelated to', function(done){
-			chai.request(app)
-				.delete('/api/groceries/1/1')
-				.send(lUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Allows an authorized user to perform deletes', function(done){
-			chai.request(app)
-				.delete('/api/groceries/1/1')
-				.send(dummyUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(200)
-					done()
-				})
-		})
-	})
-	describe('Delete grocery list', function(){
-		it('Rejects empty requests', function(done){
-			chai.request(app)
-				.delete('/api/groceries/1/1')
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Forbids a user from deleting things that they are unrelated to', function(done){
-			chai.request(app)
-				.delete('/api/groceries/1/1')
-				.send(lUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Allows an authorized user to perform deletes', function(done){
-			chai.request(app)
-				.delete('/api/groceries/1/1')
-				.send(dummyUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(200)
-					done()
-				})
-		})
-	})
-	describe('Delete group', function(){
-		it('Rejects empty requests', function(done){
-			chai.request(app)
-				.delete('/api/something/1')
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Forbids a user from deleting things that they are unrelated to', function(done){
-			chai.request(app)
-				.delete('/api/something/1')
-				.send(lUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Allows an authorized user to perform deletes', function(done){
-			chai.request(app)
-				.delete('/api/something/1')
-				.send(dummyUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(200)
-					done()
-				})
-		})
-	})
-	describe('Delete user', function(){
-		it('Rejects empty requests', function(done){
-			chai.request(app)
-				.delete('/api/users/1')
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Forbids a user from deleting things that they are unrelated to', function(done){
-			chai.request(app)
-				.delete('/api/users/1')
-				.send(lUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(401)
-					done()
-				})
-		})
-		it('Allows an authorized user to perform deletes', function(done){
-			chai.request(app)
-				.delete('/api/users/1')
-				.send(dummyUser)
-				.end((err, res) => {
-					retcode = res.status
-					expect(res.status).to.equal(200)
-					done()
-				})
+			})
 		})
 	})
 	after(function(done){
