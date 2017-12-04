@@ -28,3 +28,5 @@ app.use(function(req, res) {
 app.listen(port);
 
 console.log('Shared Spaces server processor started on ' + port);
+
+module.exports = app;
