@@ -180,6 +180,7 @@ describe('The get endpoints', function(){
 		expect(retcode).to.not.equal(404);
 		expect(retcode).to.not.equal(500);
 		expect(retcode).to.not.equal(502);
+		done()
 	})
 	endpoints.forEach(function(endpoint){
 		describe(endpoint.name, function(){
@@ -222,3 +223,4 @@ describe('The get endpoints', function(){
 		done()
 	})
 })
+done()
