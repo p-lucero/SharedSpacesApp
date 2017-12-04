@@ -7,6 +7,7 @@ VALUES
 ('John', 'Doe', 'jd@gmail.com', 'password', 9876543210, 1),
 ('Nancy', 'Smith', 'nsmith@gmail.com', 'password', 2168952473, 1),
 ('John', 'Smith', 'jssmith@yahoo.com', 'password', 6194732456, 1);
+('Lame', 'Loser', 'lameloser@gmail.com', 'password', 3333333333, 2); -- A user that's not in any group, but still exists and can login. Has no other authorizations.
 
 INSERT INTO personal_debts (amount, lender_id, borrower_id)
 VALUES
