@@ -3,6 +3,7 @@ process.env.PORT = 3002;
 
 var chai  = require('chai');
 var chaiHttp = require('chai-http');
+var cp = require('child_process');
 var server = require('../server');
 var webServer = server.server
 var app = server.app
@@ -84,9 +85,7 @@ var lUser = {
 
 describe('The delete endpoints', function(){
 	before(function(done){ // Refresh the database contents and give our users login tokens before doing any tests.
-		execsql.config(dbConfig).exec(selectDB).execFile(sqlFile, function(err, results){
-			if (err) throw err;
-			console.log(results);
+		cp.exec('mysql --username=server password=a test < ../testing_db_data.sql', function(a, b, c){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
@@ -111,7 +110,7 @@ describe('The delete endpoints', function(){
 							done();
 						})
 				})
-			}).end();
+		});
 	})
 	afterEach(function(done){ // Ensure that the return code isn't any of the following
 		expect(retcode).to.not.equal(404);

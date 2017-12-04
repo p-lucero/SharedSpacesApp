@@ -1,6 +1,7 @@
 'use strict';
 
 const uuidv4 = require('uuid/v4')
+const common = require('../models/commonModel')
 
 exports.login = function(request, response){
 	var email = request.body.email

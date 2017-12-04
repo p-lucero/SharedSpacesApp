@@ -1,4 +1,12 @@
-DELETE FROM user_accounts, personal_debts, group_debt, rent, chores, groceries;
+USE test;
+
+DELETE FROM user_accounts;
+DELETE FROM personal_debts;
+DELETE FROM group_debt;
+DELETE FROM rent;
+DELETE FROM chores;
+DELETE FROM groceries;
+DELETE FROM groups;
 
 INSERT INTO user_accounts (first_name, last_name,
 email, password, phone_number, group_id)
@@ -6,7 +14,7 @@ VALUES
 ('Kyle', 'McDevitt', 'kyle@gmail.com', 'password', 1234567890,1),
 ('John', 'Doe', 'jd@gmail.com', 'password', 9876543210, 1),
 ('Nancy', 'Smith', 'nsmith@gmail.com', 'password', 2168952473, 1),
-('John', 'Smith', 'jssmith@yahoo.com', 'password', 6194732456, 1);
+('John', 'Smith', 'jssmith@yahoo.com', 'password', 6194732456, 1),
 ('Lame', 'Loser', 'lameloser@gmail.com', 'password', 3333333333, NULL); -- A user that's not in any group, but still exists and can login. Has no other authorizations.
 
 INSERT INTO personal_debts (amount, lender_id, borrower_id)

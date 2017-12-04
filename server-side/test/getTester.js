@@ -3,6 +3,7 @@ process.env.PORT = 3002;
 
 var chai  = require('chai');
 var chaiHttp = require('chai-http');
+var cp = require('child_process');
 var server = require('../server');
 var webServer = server.server
 var app = server.app
@@ -147,12 +148,10 @@ var lUser = {
 
 describe('The get endpoints', function(){
 	before(function(done){
-		execsql.config(dbConfig).exec(selectDB).execFile(sqlFile, function(err, results){
-			if (err) throw err;
-			console.log(results);
+		cp.exec('mysql --username=server password=a test < ../testing_db_data.sql', function(a, b, c){
 			let request = dummyUser
 			request.stayLoggedIn = true
-			chai.request(server)
+			chai.request(app)
 				.post('/api/login')
 				.send(request)
 				.end((err, res) => {
@@ -162,7 +161,7 @@ describe('The get endpoints', function(){
 					expect(res.body).to.have.property('user_id')
 					dummyUser.token = res.body.token
 					let otherRequest = lUser
-					chai.request(server)
+					chai.request(app)
 						.post('/api/login')
 						.send(otherRequest)
 						.end((err, res) => {
@@ -174,7 +173,7 @@ describe('The get endpoints', function(){
 							done();
 						})
 				})
-			}).end();
+		});
 	})
 	afterEach(function(done){ // Ensure that the return code isn't any of the following
 		expect(retcode).to.not.equal(404);
@@ -223,4 +222,3 @@ describe('The get endpoints', function(){
 		done()
 	})
 })
-done()
