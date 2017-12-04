@@ -48,7 +48,7 @@ describe('Authentication controller', function() {
 	})
 	it('Rejects content-free requests', function(done){
 		chai.request(server)
-			.get('/api/login')
+			.post('/api/login')
 			.end((err, res) => {
 				expect(res.status).to.equal(400);
 				expect(res.body).to.have.property('url')
@@ -58,7 +58,7 @@ describe('Authentication controller', function() {
 	it('Rejects requests with no stayLoggedIn parameter', function(done){
 		let request = dummyUser
 		chai.request(server)
-			.get('/api/login')
+			.post('/api/login')
 			.send(request)
 			.end((err, res) => {
 				expect(res.status).to.equal(400);
@@ -70,7 +70,7 @@ describe('Authentication controller', function() {
 		let request = badUser
 		request.stayLoggedIn = true
 		chai.request(server)
-			.get('/api/login')
+			.post('/api/login')
 			.send(request)
 			.end((err, res) => {
 				expect(res.status).to.equal(401);
@@ -82,7 +82,7 @@ describe('Authentication controller', function() {
 		let request = dummyUser
 		request.stayLoggedIn = true
 		chai.request(server)
-			.get('/api/login')
+			.post('/api/login')
 			.send(request)
 			.end((err, res) => {
 				expect(res.status).to.equal(200);
@@ -96,7 +96,7 @@ describe('Authentication controller', function() {
 		let request = dummyUser
 		request.stayLoggedIn = true
 		chai.request(server)
-			.get('/api/login')
+			.post('/api/login')
 			.send(request)
 			.end((err, res) => {
 				expect(res.status).to.equal(200);
@@ -106,7 +106,7 @@ describe('Authentication controller', function() {
 				let token = res.token
 				request.token = token
 				chai.request(server)
-					.get('/api/login')
+					.post('/api/login')
 					.send(request)
 					.end((err, res) =>{
 						expect(res.status).to.equal(200);
@@ -122,7 +122,7 @@ describe('Authentication controller', function() {
 		let request = dummyUser
 		request.stayLoggedIn = true
 		chai.request(server)
-			.get('/api/login')
+			.post('/api/login')
 			.send(request)
 			.end((err, res) => {
 				expect(res.status).to.equal(200);
@@ -131,7 +131,7 @@ describe('Authentication controller', function() {
 				expect(res.body).to.have.property('user_id')
 				let token = res.token
 				chai.request(server)
-					.get('/api/login')
+					.post('/api/login')
 					.send(request)
 					.end((err, res) =>{
 						expect(res.status).to.equal(200);
@@ -147,7 +147,7 @@ describe('Authentication controller', function() {
 		let request = dummyUser
 		request.stayLoggedIn = true
 		chai.request(server)
-			.get('/api/login')
+			.post('/api/login')
 			.send(request)
 			.end((err, res) => {
 				expect(res.status).to.equal(200);
@@ -157,7 +157,7 @@ describe('Authentication controller', function() {
 				let token = res.token
 				request.token = token
 				chai.request(server)
-					.get('/api/logout')
+					.post('/api/logout')
 					.send(request)
 					.end((err, res) =>{
 						expect(res.status).to.equal(200);
@@ -168,7 +168,7 @@ describe('Authentication controller', function() {
 	})
 	it('Rejects a user from logging out if they fail to supply a token', function(done){
 		chai.request(server)
-			.get('/api/logout')
+			.post('/api/logout')
 			.end((err, res) => {
 				expect(res.status).to.equal(400)
 				expect(res.body).to.have.property('url')
@@ -177,7 +177,7 @@ describe('Authentication controller', function() {
 	})
 	it('Rejects tokens that do not exist (even if they are valid UUIDs)', function(done){
 		chai.request(server)
-			.get('/api/logout')
+			.post('/api/logout')
 			.send({token:uuidv4()})
 			.end((err, res) => {
 				expect(res.status).to.equal(400)
