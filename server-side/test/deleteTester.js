@@ -90,7 +90,7 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/groupDebts/1/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(400)
+					expect(res.status).to.equal(401)
 					retcode = res.status
 					done()
 				})
@@ -121,7 +121,7 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/personalDebts/1/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(400)
+					expect(res.status).to.equal(401)
 					retcode = res.status
 					done()
 				})
@@ -152,7 +152,7 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/groceries/1/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(400)
+					expect(res.status).to.equal(401)
 					retcode = res.status
 					done()
 				})
@@ -183,7 +183,7 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/groceries/1/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(400)
+					expect(res.status).to.equal(401)
 					retcode = res.status
 					done()
 				})
@@ -214,7 +214,7 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/something/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(400)
+					expect(res.status).to.equal(401)
 					retcode = res.status
 					done()
 				})
@@ -245,7 +245,7 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/users/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(400)
+					expect(res.status).to.equal(401)
 					retcode = res.status
 					done()
 				})
