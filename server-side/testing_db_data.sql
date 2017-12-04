@@ -6,6 +6,14 @@ DELETE FROM rent;
 DELETE FROM chores;
 DELETE FROM groceries;
 
+ALTER TABLE user_accounts AUTO_INCREMENT = 1;
+ALTER TABLE personal_debts AUTO_INCREMENT = 1;
+ALTER TABLE groups AUTO_INCREMENT = 1;
+ALTER TABLE group_debt AUTO_INCREMENT = 1;
+ALTER TABLE rent AUTO_INCREMENT = 1;
+ALTER TABLE chores AUTO_INCREMENT = 1;
+ALTER TABLE groceries AUTO_INCREMENT = 1;
+
 INSERT INTO user_accounts (first_name, last_name,
 email, password, phone_number, group_id)
 VALUES 
