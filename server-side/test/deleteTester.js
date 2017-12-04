@@ -90,8 +90,8 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/groupDebts/1/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -100,8 +100,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/groupDebts/1/1')
 				.send(lUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -110,8 +110,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/groupDebts/1/1')
 				.send(dummyUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(200)
 					retcode = res.status
+					expect(res.status).to.equal(200)
 					done()
 				})
 		})
@@ -121,8 +121,8 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/personalDebts/1/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -131,8 +131,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/personalDebts/1/1')
 				.send(lUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -141,8 +141,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/personalDebts/1/1')
 				.send(dummyUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(200)
 					retcode = res.status
+					expect(res.status).to.equal(200)
 					done()
 				})
 		})
@@ -152,8 +152,8 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/groceries/1/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -162,8 +162,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/groceries/1/1')
 				.send(lUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -172,8 +172,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/groceries/1/1')
 				.send(dummyUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(200)
 					retcode = res.status
+					expect(res.status).to.equal(200)
 					done()
 				})
 		})
@@ -183,8 +183,8 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/groceries/1/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -193,8 +193,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/groceries/1/1')
 				.send(lUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -203,8 +203,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/groceries/1/1')
 				.send(dummyUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(200)
 					retcode = res.status
+					expect(res.status).to.equal(200)
 					done()
 				})
 		})
@@ -214,8 +214,8 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/something/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -224,8 +224,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/something/1')
 				.send(lUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -234,8 +234,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/something/1')
 				.send(dummyUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(200)
 					retcode = res.status
+					expect(res.status).to.equal(200)
 					done()
 				})
 		})
@@ -245,8 +245,8 @@ describe('The delete endpoints', function(){
 			chai.request(app)
 				.delete('/api/users/1')
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -255,8 +255,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/users/1')
 				.send(lUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(401)
 					retcode = res.status
+					expect(res.status).to.equal(401)
 					done()
 				})
 		})
@@ -265,8 +265,8 @@ describe('The delete endpoints', function(){
 				.delete('/api/users/1')
 				.send(dummyUser)
 				.end((err, res) => {
-					expect(res.status).to.equal(200)
 					retcode = res.status
+					expect(res.status).to.equal(200)
 					done()
 				})
 		})
