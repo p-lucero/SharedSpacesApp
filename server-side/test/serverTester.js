@@ -8,6 +8,7 @@ var expect = chai.expect;
 
 chai.use(chaiHttp);
 
+
 // http://chaijs.com/api/bdd/ contains the documentation for how things work here
 
 var dummyUser = {
@@ -30,15 +31,25 @@ var badUser = {
 
 describe('The server', function() {
 	it('Launches', function(done){
-
+		expect(server).to.not.be.empty;
+		console.log(global.pool)
+		done()
 	})
 	it('Creates an expressJS app', function(done){
-
+		expect(server).to.have.nested.property('_router.stack')
+		expect(server._router.stack).to.have.lengthOf(22)
+		done()
 	})
 	it('Connects to mySQL', function(done){
-
+		expect(global.pool).to.not.be.empty;
+		done()
 	})
 	it('404s on garbage URLs', function(done){
-
+		chai.request(server)
+			.post('/api/garbage')
+			.end((err, res) => {
+				expect(res.status).to.equal(404);
+				done();
+			})
 	})
 })
