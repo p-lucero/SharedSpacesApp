@@ -145,7 +145,7 @@ var lUser = {
 
 describe('The put endpoints', function(){
 	before(function(done){
-		cp.exec('mysql --username=server password=a test < ../testing_db_data.sql', function(a, b, c){
+		cp.exec('mysql --user="server" --password="a" test < testing_db_data.sql', function(a, b, c){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)

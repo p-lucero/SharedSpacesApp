@@ -41,7 +41,7 @@ var badUser = {
 
 describe('Authentication controller', function() {
 	before(function(done){
-		cp.exec('mysql --username=server password=a test < ../testing_db_data.sql', function(a, b, c){done()});
+		cp.exec('mysql --user="server" --password="a" test < testing_db_data.sql', function(a, b, c){done()});
 	})
 	it('Rejects content-free requests', function(done){
 		chai.request(app)

@@ -18,8 +18,6 @@ var dbConfig = {
 	user: 'root',
 	insecureAuth: true
 }
-var selectDB = `use ${process.env.DATABASE};`
-var sqlFile = __dirname + '/../testing_db_data.sql'
 
 var endpoints = [{
 	name: 'Get group info',
@@ -148,7 +146,7 @@ var lUser = {
 
 describe('The get endpoints', function(){
 	before(function(done){
-		cp.exec('mysql --username=server password=a test < ../testing_db_data.sql', function(a, b, c){
+		cp.exec('mysql --user="server" --password="a" test < testing_db_data.sql', function(a, b, c){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
