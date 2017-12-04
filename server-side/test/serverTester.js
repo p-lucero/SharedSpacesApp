@@ -35,8 +35,8 @@ describe('The server', function() {
 		done()
 	})
 	it('Creates an expressJS app', function(done){
-		expect(server).to.have.nested.property('_router.stack')
-		expect(server._router.stack).to.have.lengthOf(22)
+		expect(server.app).to.have.nested.property('_router.stack')
+		expect(server.app._router.stack).to.have.lengthOf(22)
 		done()
 	})
 	it('Connects to mySQL', function(done){
