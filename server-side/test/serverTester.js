@@ -32,7 +32,6 @@ var badUser = {
 describe('The server', function() {
 	it('Launches', function(done){
 		expect(server).to.not.be.empty;
-		console.log(global.pool)
 		done()
 	})
 	it('Creates an expressJS app', function(done){
