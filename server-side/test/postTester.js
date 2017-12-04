@@ -4,9 +4,120 @@ process.env.PORT = 3002;
 var chai  = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../server');
+var webServer = server.server
+var app = server.app
+var execsql = require('execsql');
 var expect = chai.expect;
+let retcode
 
 chai.use(chaiHttp);
+
+var dbConfig = {
+	host: 'localhost',
+	user: 'root',
+	insecureAuth: true
+}
+var selectDB = `use ${process.env.DATABASE};`
+var sqlFile = __dirname + '/../testing_db_data.sql'
+
+var endpoints = [{
+	name: 'Create group',
+	uri: '/api/groups',
+	badQuery: {
+		'nroupGame': 'groupName'
+	},
+	goodQuery: {
+		groupName: 'Definitely Not Shared Spaces'
+	}
+},
+{
+	name: 'Create user',
+	uri: '/api/users',
+	badQuery: {
+		email:'foo@bar.com',
+		password:'foofoofoo',
+		phoneNumber:'1111111111'
+	},
+	goodQuery: {
+		first:'Foo',
+		last:'Bar',
+		email:'foo@bar.com',
+		password:'feefiefoofum',
+		phoneNumber:'999999999'
+	},
+	invalidEmailQuery: {
+		first:'Foo',
+		last:'Bar',
+		email:'foobarfoobarfoobar',
+		password:'feefiefoofum',
+		phoneNumber:'999999999'
+	},
+	alreadyRegisteredQuery {
+		first:'John',
+		last:'Digweed',
+		email:'jd@gmail.com',
+		password:'wordpass',
+		phoneNumber:'5555555555'
+	}
+},
+{
+	name: 'Create group debt',
+	uri: '/api/groupDebts/2',
+	badQuery: {
+		debtType: 'House burned down'
+	},
+	goodQuery: {
+		debtType: 'House burned down',
+		amount: 9999999999
+	},
+},
+{
+	name: 'Create personal debt',
+	uri: '/api/personalDebts',
+	badQuery: {
+		amount: 999999999
+	},
+	goodQuery: {
+		lender: 3,
+		borrower: 2,
+		amount: 999999999
+	},
+},
+{
+	name: 'Create grocery item',
+	uri: '/api/groceries/2',
+	badQuery: {
+		amount: 444444444
+	},
+	goodQuery: {
+		amount: 444444444
+		userID: 5
+	},
+},
+{
+	name: 'Create chore',
+	uri: '/api/chores/2',
+	badQuery: {
+		chore: 'Clean the goddamn sink'
+	},
+	goodQuery: {
+		chore: 'Clean the goddamn sink',
+		due_date: '02-02-2020', // may break things; what formats can mysql accept dates in? need to input fuzz this
+		userID: 5
+	},
+},
+{
+	name: 'Create rent',
+	uri: '/api/rent/2',
+	badQuery: {
+		amount: 'six billion and two'
+	},
+	goodQuery: {
+		amount: 1,
+		userID: 5
+	},
+},
+]
 
 // http://chaijs.com/api/bdd/ contains the documentation for how things work here
 
@@ -28,134 +139,158 @@ var badUser = {
 	phone_number: 9999999999
 }
 
+var lUser = {
+	id: 5,
+	first_name: 'Lame',
+	last_name: 'Loser',
+	email: 'lameloser@gmail.com',
+	password: 'password',
+	phone_number: 3333333333
+}
+
 describe('The post endpoints', function(){
 	before(function(done){
 		execsql.config(dbConfig).exec(selectDB).execFile(sqlFile, function(err, results){
 			if (err) throw err;
 			console.log(results);
-			done()
-		}).end();
+			let request = dummyUser
+			request.stayLoggedIn = true
+			chai.request(server)
+				.post('/api/login')
+				.send(request)
+				.end((err, res) => {
+					expect(res.status).to.equal(200);
+					expect(res.body).to.have.property('success')
+					expect(res.body).to.have.property('token')
+					expect(res.body).to.have.property('user_id')
+					dummyUser.token = res.body.token
+					let otherRequest = lUser
+					chai.request(server)
+						.post('/api/login')
+						.send(otherRequest)
+						.end((err, res) => {
+							expect(res.status).to.equal(200);
+							expect(res.body).to.have.property('success')
+							expect(res.body).to.have.property('token')
+							expect(res.body).to.have.property('user_id')
+							lUser.token = res.body.token
+							done();
+						})
+				})
+			}).end();
 	})
-	describe('Create group', function(){
-		it('Exists', function(done){
-
-		})
-		it('Rejects content-free requests', function(done){
-
-		})
-		it('Rejects requests that only have some valid parameters', function(done){
-
-		})
-		it('Rejects valid requests from users that are not logged in', function(done){
-
-		})
-		it('Does not throw 500s or 502s', function(done){
-
-		})
-		it('Rejects valid requests from users that are already part of a group', function(done){
-
+	afterEach(function(done){ // Ensure that the return code isn't any of the following
+		expect(retcode).to.not.equal(404);
+		expect(retcode).to.not.equal(500);
+		expect(retcode).to.not.equal(502);
+		done()
+	})
+	endpoints.forEach(function(endpoint){
+		describe(endpoint.name, function(){
+			it('Rejects content-free requests', function(done){
+				chai.request(app)
+					.post(endpoint.uri)
+					.end((err, res) => {
+						retcode = res.status
+						expect(res.status).to.equal(400)
+						done()
+					})
+			})
+			it('Rejects requests that only have some valid parameters', function(done){
+				endpoint.badQuery.token = dummyUser.token
+				chai.request(app)
+					.post(endpoint.uri)
+					.send(endpoint.badQuery)
+					.end((err, res) => {
+						retcode = res.status
+						expect(res.status).to.equal(400)
+						done()
+					})
+			})
+			if (endpoint.name !== "Create user"){
+				it('Rejects valid requests from users that are not logged in', function(done){
+					chai.request(app)
+						.post(endpoint.uri)
+						.send(endpoint.goodQuery)
+						.end((err, res) => {
+							retcode = res.status
+							expect(res.status).to.equal(401)
+							done()
+						})
+				})
+			}
+			if (endpoint.name === "Create group"){
+				it('Rejects valid requests from users that are already part of a group', function(done){
+					endpoint.goodQuery.token = dummyUser.token
+					chai.request(app)
+						.post(endpoint.uri)
+						.send(endpoint.alreadyInGroupQuery)
+						.end((err, res) => {
+							retcode = res.status
+							expect(res.status).to.equal(409)
+							expect(res.body).to.have.property('url').that.is.a('string')
+							done()
+						})
+				})
+			}
+			if (endpoint.name === "Create user"){
+				it('Rejects invalid email addresses', function(done){
+					chai.request(app)
+						.post(endpoint.uri)
+						.send(endpoint.invalidEmailQuery)
+						.end((err, res) => {
+							retcode = res.status
+							expect(res.status).to.equal(400)
+							expect(res.body).to.have.property('url').that.is.a('string') // HACK
+							done()
+						})
+				})
+				it('Rejects valid requests from users that are already registered', function(done){
+					chai.request(app)
+						.post(endpoint.uri)
+						.send(endpoint.alreadyRegisteredQuery)
+						.end((err, res) => {
+							retcode = res.status
+							expect(res.status).to.equal(409)
+							expect(res.body).to.have.property('url').that.is.a('string')
+							done()
+						})
+				})
+			}
+			if (endpoint.uri.endswith('2') || endpoint.name == "Create personal debt"){
+				it('Rejects valid requests from users that are not in that group', function(done){
+					endpoint.goodQuery.token = dummyUser.token
+					chai.request(app)
+						.post(endpoint.uri)
+						.send(endpoint.goodQuery)
+						.end((err, res) => {
+							retcode = res.status
+							expect(res.status).to.equal(401)
+							done()
+						})
+				})
+			}
+			it ('Accepts valid requests', function(done){
+				endpoint.goodQuery.token = lUser.token
+				chai.request(app)
+					.post(endpoint.uri)
+					.send(endpoint.goodQuery)
+					.end((err, res) => {
+						retcode = res.status
+						expect(res.status).to.equal(200)
+						if (endpoint.name === "Create group"){
+							expect(res.body).to.have.property('id')
+						}
+						if (endpoint.name === "Create user"){
+							expect(res.body).to.have.property('token')
+						}
+						done()
+					})
+			})
 		})
 	})
-	describe('Create user', function(){
-		it('Exists', function(done){
-
-		})
-		it('Rejects content-free requests', function(done){
-
-		})
-		it('Rejects requests that only have some valid parameters', function(done){
-
-		})
-		it('Rejects valid requests from users that are already registered', function(done){
-
-		})
-		it('Does not throw 500s or 502s', function(done){
-
-		})
-	})
-	describe('Create group debt', function(){
-		it('Exists', function(done){
-
-		})
-		it('Rejects content-free requests', function(done){
-
-		})
-		it('Rejects requests that only have some valid parameters', function(done){
-
-		})
-		it('Rejects valid requests from users that are not logged in', function(done){
-
-		})
-		it('Does not throw 500s or 502s', function(done){
-
-		})
-	})
-	describe('Create personal debt', function(){
-		it('Exists', function(done){
-
-		})
-		it('Rejects content-free requests', function(done){
-
-		})
-		it('Rejects requests that only have some valid parameters', function(done){
-
-		})
-		it('Rejects valid requests from users that are not logged in', function(done){
-
-		})
-		it('Does not throw 500s or 502s', function(done){
-
-		})
-	})
-	describe('Create grocery item', function(){
-		it('Exists', function(done){
-
-		})
-		it('Rejects content-free requests', function(done){
-
-		})
-		it('Rejects requests that only have some valid parameters', function(done){
-
-		})
-		it('Rejects valid requests from users that are not logged in', function(done){
-
-		})
-		it('Does not throw 500s or 502s', function(done){
-
-		})
-	})
-	describe('Create chore', function(){
-		it('Exists', function(done){
-
-		})
-		it('Rejects content-free requests', function(done){
-
-		})
-		it('Rejects requests that only have some valid parameters', function(done){
-
-		})
-		it('Rejects valid requests from users that are not logged in', function(done){
-
-		})
-		it('Does not throw 500s or 502s', function(done){
-
-		})
-	})
-	describe('Create rent', function(){
-		it('Exists', function(done){
-
-		})
-		it('Rejects content-free requests', function(done){
-
-		})
-		it('Rejects requests that only have some valid parameters', function(done){
-
-		})
-		it('Rejects valid requests from users that are not logged in', function(done){
-
-		})
-		it('Does not throw 500s or 502s', function(done){
-
-		})
+	after(function(done){
+		webServer.close()
+		done()
 	})
 })
