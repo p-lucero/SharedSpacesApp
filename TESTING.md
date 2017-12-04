@@ -10,6 +10,6 @@ npm test
 
 A reference output is provided below.
 
-![Screenshot of the test results from Mocha](Link)
+![Screenshot of the test results from Mocha](https://i.imgur.com/a1OT0s8.png)
 
 User Acceptance Tests: These can be found at UATPLAN.pdf.
