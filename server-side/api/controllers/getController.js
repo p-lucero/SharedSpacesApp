@@ -111,7 +111,7 @@ exports.get_personal_debt_info = function(request, response) {
 	}
 	global.pool.query("SELECT group_id FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
 			authenticated = false
@@ -145,7 +145,7 @@ exports.get_grocery_item = function(request, response) {
 	}
 	global.pool.query("SELECT group_id FROM groceries WHERE id=?", [request.params.groceryId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
 			authenticated = false
@@ -179,7 +179,7 @@ exports.get_chore_info = function(request, response) {
 	}
 	global.pool.query("SELECT group_id FROM chores WHERE id=?", [request.params.choreId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
 			authenticated = false

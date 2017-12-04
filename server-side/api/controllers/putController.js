@@ -24,7 +24,7 @@ exports.update_group_info = function(request, response) {
 	}
 	global.pool.query("SELECT * FROM groups WHERE id=?", [request.params.groupId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else if (request.params.groupId != userInfo.groupID) {
 			authenticated = false
@@ -110,7 +110,7 @@ exports.update_group_debt = function(request, response) {
 	}
 	global.pool.query("SELECT group_id FROM group_debt WHERE id=?", [request.params.debtId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
 			authenticated = false
@@ -132,7 +132,7 @@ exports.update_personal_debt = function(request, response) {
 	}
 	global.pool.query("SELECT * FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
@@ -151,7 +151,7 @@ exports.update_grocery_item = function(request, response) {
 	}
 	global.pool.query("SELECT group_id FROM groceries WHERE id=?", [request.params.groceryId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
 			authenticated = false
@@ -173,7 +173,7 @@ exports.update_chore_item = function(request, response) {
 	}
 	global.pool.query("SELECT group_id FROM chores WHERE id=?", [request.params.choreId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
 			authenticated = false
@@ -195,7 +195,7 @@ exports.update_rent_info = function(request, response) {
 	}
 	global.pool.query("SELECT * FROM rent WHERE group_id=?", [request.params.groupId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
 			authenticated = false

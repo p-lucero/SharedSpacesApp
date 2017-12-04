@@ -98,6 +98,7 @@ describe('The delete endpoints', function(){
 					expect(res.body).to.have.property('user_id')
 					dummyUser.token = res.body.token
 					let otherRequest = lUser
+					otherRequest.stayLoggedIn = true
 					chai.request(app)
 						.post('/api/login')
 						.send(otherRequest)

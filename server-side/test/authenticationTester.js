@@ -126,7 +126,7 @@ describe('Authentication controller', function() {
 				expect(res.body).to.have.property('success')
 				expect(res.body).to.have.property('token')
 				expect(res.body).to.have.property('user_id')
-				let token = res.token
+				let token = res.body.token
 				chai.request(app)
 					.post('/api/login')
 					.send(request)
@@ -135,7 +135,7 @@ describe('Authentication controller', function() {
 						expect(res.body).to.have.property('success')
 						expect(res.body).to.have.property('token')
 						expect(res.body).to.have.property('user_id')
-						expect(res.token).to.not.equal(token)
+						expect(res.body.token).to.not.equal(token)
 						done()
 					})
 			})
@@ -151,7 +151,7 @@ describe('Authentication controller', function() {
 				expect(res.body).to.have.property('success')
 				expect(res.body).to.have.property('token')
 				expect(res.body).to.have.property('user_id')
-				let token = res.token
+				let token = res.body.token
 				request.token = token
 				chai.request(app)
 					.post('/api/logout')
