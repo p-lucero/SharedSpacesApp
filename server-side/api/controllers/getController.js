@@ -66,6 +66,18 @@ exports.get_user_info = function(request, response) {
 	}
 };
 
+exports.search_users = function(request, response) {
+	var attributes = ["email"]
+	var placeholders = ["email"]
+	var skeleton = "SELECT id, first_name, last_name, email, phone_number, facebook_profile, twitter_handle, instagram, group_id FROM user_accounts WHERE email LIKE ?%;"
+	var userInfo = common.get_info_from_token(request.body.token)
+	var authenticated = true
+	if (!userInfo){
+		authenticated = false
+	}
+	common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+}
+
 exports.get_group_debt_list = function(request, response) {
 	var attributes = []
 	var placeholders = ["groupId"]
