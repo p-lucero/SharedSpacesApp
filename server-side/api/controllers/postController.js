@@ -15,7 +15,7 @@ exports.create_new_group = function(request, response){
 	}
 	else {
 		global.pool.query("SELECT group_id FROM user_accounts WHERE id=?", [userInfo.userID], function(err, task){
-			if (task.length !== 0){
+			if (task[0].group_id === null){
 				response.status(409).send({url: request.originalUrl + " received a request to create a group, but is already in a group"})
 			}
 			else {

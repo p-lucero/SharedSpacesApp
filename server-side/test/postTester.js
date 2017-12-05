@@ -33,7 +33,7 @@ var endpoints = [
 	goodQuery: {
 		first:'Foo',
 		last:'Bar',
-		email:'foo@bar.com',
+		email:'bar@foo.com',
 		password:'feefiefoofum',
 		phoneNumber:'999999999'
 	},
@@ -193,12 +193,31 @@ describe('The post endpoints', function(){
 					.post(endpoint.uri)
 					.end((err, res) => {
 						retcode = res.status
-						if (endpoint.name === "Create user"){
+						if (endpoint.name === "Create user" || endpoint.name === "Create personal debt"){
 							expect(res.status).to.equal(400)
 						}
 						else {
 							expect(res.status).to.equal(401)
 						}
+						done()
+					})
+			})
+			it('Rejects requests that only have some valid parameters', function(done){
+				if (endpoint.name === "Create group"){
+					endpoint.badQuery.token = lUser.token
+				}
+				else if (endpoint.name !== "Create user"){
+					endpoint.badQuery.token = dummyUser.token
+				}
+				else {
+					endpoint.badQuery.token = 'a' // Maybe necessary? HACK
+				}
+				chai.request(app)
+					.post(endpoint.uri)
+					.send(endpoint.badQuery)
+					.end((err, res) => {
+						retcode = res.status
+						expect(res.status).to.equal(400)
 						done()
 					})
 			})
@@ -257,25 +276,6 @@ describe('The post endpoints', function(){
 						})
 				})
 			}
-			it('Rejects requests that only have some valid parameters', function(done){
-				if (endpoint.name === "Create group"){
-					endpoint.badQuery.token = lUser.token
-				}
-				else if (endpoint.name !== "Create user"){
-					endpoint.badQuery.token = dummyUser.token
-				}
-				else {
-					endpoint.badQuery.token = '' // Maybe necessary? HACK
-				}
-				chai.request(app)
-					.post(endpoint.uri)
-					.send(endpoint.badQuery)
-					.end((err, res) => {
-						retcode = res.status
-						expect(res.status).to.equal(400)
-						done()
-					})
-			})
 		})
 	})
 	after(function(done){
