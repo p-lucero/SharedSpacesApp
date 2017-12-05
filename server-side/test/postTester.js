@@ -71,7 +71,7 @@ var endpoints = [
 	},
 	goodQuery: {
 		lender: 3,
-		borrower: 2,
+		borrower: 1,
 		amount: 999999999
 	},
 },
@@ -215,7 +215,7 @@ describe('The post endpoints', function(){
 						})
 				})
 			}
-			if (endpoint.name === "Create group debt" || endpoint.name === "Create grocery item" || endpoint.name === "Create chore" || endpoint.name === "Create rent" || "Create personal debt"){
+			if (endpoint.name === "Create group debt" || endpoint.name === "Create grocery item" || endpoint.name === "Create chore" || endpoint.name === "Create rent" || endpoint.name === "Create personal debt"){
 				it('Rejects valid requests from users that are not in that group', function(done){
 					endpoint.goodQuery.token = lUser.token
 					chai.request(app)
@@ -272,7 +272,7 @@ describe('The post endpoints', function(){
 					.send(endpoint.badQuery)
 					.end((err, res) => {
 						retcode = res.status
-						expect(res.status).to.equal(401)
+						expect(res.status).to.equal(400)
 						done()
 					})
 			})

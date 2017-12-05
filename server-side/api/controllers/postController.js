@@ -100,8 +100,7 @@ exports.create_new_personal_debt = function(request, response) {
 		if (!userInfo || (userInfo.userID != request.body.lender && userInfo.userID != request.body.borrower)){
 			authenticated = false
 		}
-			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
-		}
+		common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 	}
 };
 

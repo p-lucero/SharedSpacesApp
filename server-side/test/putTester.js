@@ -186,7 +186,12 @@ describe('The put endpoints', function(){
 					.put(endpoint.uri)
 					.end((err, res) => {
 						retcode = res.status
-						expect(res.status).to.equal(401)
+						if (endpoint.name === "Update personal debt"){
+							expect(res.status).to.equal(400)
+						}
+						else {
+							expect(res.status).to.equal(401)
+						}
 						done()
 					})
 			})
