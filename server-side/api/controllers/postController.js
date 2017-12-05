@@ -93,10 +93,16 @@ exports.create_new_personal_debt = function(request, response) {
 	var skeleton = "INSERT INTO personal_debts (amount, lender_id, borrower_id) VALUES (?, ?, ?);"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	if (!userInfo || (userInfo.userID != request.body.lender && userInfo.userID != request.body.borrower)){
-		authenticated = false
+	if (typeof request.body.lender === "undefined" || typeof request.body.borrower === "undefined"){
+		response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
 	}
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+	else {
+		if (!userInfo || (userInfo.userID != request.body.lender && userInfo.userID != request.body.borrower)){
+			authenticated = false
+		}
+			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+		}
+	}
 };
 
 exports.create_new_grocery_item = function(request, response) {
