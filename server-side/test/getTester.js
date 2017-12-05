@@ -56,12 +56,12 @@ var endpoints = [{
 {
 	name: 'Get group debt info',
 	uri: '/api/groupDebts/1/1',
-	requiredAttributes: {
+	requiredAttributes: [
 		// id: 'number',
 		// debt_type: 'string',
 		// amount: 'number',
 		// group_id: 'number'
-	}
+	]
 },
 {
 	name: 'Get personal debt list',

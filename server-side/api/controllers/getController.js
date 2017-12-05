@@ -53,7 +53,7 @@ exports.get_user_info = function(request, response) {
 	var skeleton = "SELECT id, first_name, last_name, email, phone_number, facebook_profile, twitter_handle, instagram, group_id FROM user_accounts WHERE id=?;"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	if (!userInfo){
+	if (!userInfo || userInfo.userID != request.params.userId){
 		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
 	}
 	else {
@@ -111,12 +111,12 @@ exports.get_personal_debt_info = function(request, response) {
 	if (!userInfo){
 		authenticated = false
 	}
-	global.pool.query("SELECT group_id FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
+	global.pool.query("SELECT lender_id, borrower_id FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		if (authenticated) {
-			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+			if ((task[0].lender_id != request.params.userId || task[0].lender_id != userInfo.userID || request.params.userId != userInfo.userID) && (task[0].borrower_id != request.params.userId || task[0].borrower_id != userInfo.userID || request.params.userId != userInfo.userID)) {
 				authenticated = false
 			}
 		}
@@ -180,7 +180,7 @@ exports.get_chore_info = function(request, response) {
 	var skeleton = "SELECT * FROM chores WHERE chore_id=?;"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	if (!userInfo){
+	if (!userInfo || request.params.groupId != userInfo.groupID){
 		authenticated = false
 	}
 	global.pool.query("SELECT group_id FROM chores WHERE id=?", [request.params.choreId], function(err, task){
