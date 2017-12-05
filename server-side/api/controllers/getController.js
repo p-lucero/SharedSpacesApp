@@ -118,7 +118,7 @@ exports.get_personal_debt_info = function(request, response) {
 				authenticated = false
 			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 		}
 	})
@@ -154,7 +154,7 @@ exports.get_grocery_item = function(request, response) {
 				authenticated = false
 			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 		}
 	})
@@ -190,7 +190,7 @@ exports.get_chore_info = function(request, response) {
 				authenticated = false
 			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
 		}
 	})

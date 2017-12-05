@@ -117,7 +117,7 @@ exports.update_group_debt = function(request, response) {
 				authenticated = false
 			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 		}
 	})
@@ -160,7 +160,7 @@ exports.update_grocery_item = function(request, response) {
 				authenticated = false
 			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 		}
 	})
@@ -184,7 +184,7 @@ exports.update_chore_item = function(request, response) {
 				authenticated = false
 			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 		}
 	})
@@ -208,7 +208,7 @@ exports.update_rent_info = function(request, response) {
 				authenticated = false
 			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 		}
 	})
