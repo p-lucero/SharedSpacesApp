@@ -20,71 +20,73 @@ exports.update_group_info = function(request, response) {
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo || userInfo.groupID != request.params.groupId){
-		authenticated = false
+		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
 	}
-	global.pool.query("SELECT * FROM groups WHERE id=?", [request.params.groupId], function(err, task){
-		if (task.length === 0){
-			response.status(404).send({url: request.originalUrl + " not found"})
-		}
-		else if (request.params.groupId != userInfo.groupID) {
-			authenticated = false
-		}
-		else {
-			common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
-				if (err){
-					response.status(500).send(err)
-				}
-				else {
-					common.perform_query([], ["groupId"], "SELECT id FROM users WHERE group_id=?", authenticated, null, function(data, err, task, request, response) {
-						let toBeCleared = []
-						let toBeUpdated = []
-						let inGroupUsers = []
-						let inUpdateUsers = request.body.users
-						for (let i = 0; i < task.length; i++){
-							inGroupUsers.push(task[i].id)
-						}
-						let allUsers = [...new Set([...inUpdateUsers, ...inGroupUsers])]
-						for (let user of allUsers){
-							if (inGroupUsers.indexOf(user) > -1 && !inUpdateUsers.indexOf(user) > -1){
-								toBeCleared.push(user)
-							}
-							else if (!inGroupUsers.indexOf(user) > -1 && inUpdateUsers.indexOf(user) > -1){
-								toBeUpdated.push(user)
-							}
-						}
-						if (toBeCleared.length > 0){
-							let skeleton = "UPDATE users SET group_id=null WHERE id=?"
-							for (let i = 1; i < toBeCleared.length; i++){
-								skeleton += " OR id=?"
-							}
-							global.pool.query(skeleton, toBeCleared, function(err, task){
-								if (err){
-									response.status(500).send(err)
-								}
-							})
-						}
-						if (toBeUpdated.length > 0){
-							toBeUpdated.unshift(request.params.groupId)
-							let skeleton = "UPDATE users SET group_id=null WHERE id=?"
-							for (let j = 1; j < toBeCleared.length; j++){
-								skeleton += " OR id=?"
-							}
-							global.pool.query(skeleton, toBeCleared, function(err, task){
-								if (err){
-									response.status(500).send(err)
-								}
-							})
-						}
-						if (!response.headersSent){
-							response.json(200)
-						}
-					}
-					, request, response)
-				}
+	else {
+		global.pool.query("SELECT * FROM groups WHERE id=?", [request.params.groupId], function(err, task){
+			if (task.length === 0){
+				response.status(404).send({url: request.originalUrl + " not found"})
 			}
-			, request, response)
-		}
-	})
+			else if (request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
+			else {
+				common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
+					if (err){
+						response.status(500).send(err)
+					}
+					else {
+						common.perform_query([], ["groupId"], "SELECT id FROM users WHERE group_id=?", authenticated, null, function(data, err, task, request, response) {
+							let toBeCleared = []
+							let toBeUpdated = []
+							let inGroupUsers = []
+							let inUpdateUsers = request.body.users
+							for (let i = 0; i < task.length; i++){
+								inGroupUsers.push(task[i].id)
+							}
+							let allUsers = [...new Set([...inUpdateUsers, ...inGroupUsers])]
+							for (let user of allUsers){
+								if (inGroupUsers.indexOf(user) > -1 && !inUpdateUsers.indexOf(user) > -1){
+									toBeCleared.push(user)
+								}
+								else if (!inGroupUsers.indexOf(user) > -1 && inUpdateUsers.indexOf(user) > -1){
+									toBeUpdated.push(user)
+								}
+							}
+							if (toBeCleared.length > 0){
+								let skeleton = "UPDATE users SET group_id=null WHERE id=?"
+								for (let i = 1; i < toBeCleared.length; i++){
+									skeleton += " OR id=?"
+								}
+								global.pool.query(skeleton, toBeCleared, function(err, task){
+									if (err){
+										response.status(500).send(err)
+									}
+								})
+							}
+							if (toBeUpdated.length > 0){
+								toBeUpdated.unshift(request.params.groupId)
+								let skeleton = "UPDATE users SET group_id=null WHERE id=?"
+								for (let j = 1; j < toBeCleared.length; j++){
+									skeleton += " OR id=?"
+								}
+								global.pool.query(skeleton, toBeCleared, function(err, task){
+									if (err){
+										response.status(500).send(err)
+									}
+								})
+							}
+							if (!response.headersSent){
+								response.json(200)
+							}
+						}
+						, request, response)
+					}
+				}
+				, request, response)
+			}
+		})
+	}
 };
 
 exports.update_user_info = function(request, response) {
@@ -129,17 +131,22 @@ exports.update_personal_debt = function(request, response) {
 	var skeleton = "UPDATE personal_debts SET amount=?, lender_id=?, borrower_id=? where id=?;"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	if (!userInfo || (userInfo.userID != request.body.lenderID && userInfo.userID != request.body.borrowerID)){
-		authenticated = false
+	if (typeof request.body.lenderID === "undefined" || typeof request.body.borrowerID === "undefined"){
+		response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
 	}
-	global.pool.query("SELECT * FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
-		if (task.length === 0){
-			response.status(404).send({url: request.originalUrl + " not found"})
+	else {
+		if (!userInfo || (userInfo.userID != request.body.lenderID && userInfo.userID != request.body.borrowerID)){
+			authenticated = false
 		}
-		else {
-			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
-		}
-	})
+		global.pool.query("SELECT * FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
+			if (task.length === 0){
+				response.status(404).send({url: request.originalUrl + " not found"})
+			}
+			else {
+				common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+			}
+		})
+	}
 };
 
 exports.update_grocery_item = function(request, response) {
