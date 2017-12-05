@@ -129,7 +129,7 @@ exports.update_personal_debt = function(request, response) {
 	var skeleton = "UPDATE personal_debts SET amount=?, lender_id=?, borrower_id=? where id=?;"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	if (!userInfo || (userInfo.userID != request.params.lenderID && userInfo.userID != request.params.borrowerID)){
+	if (!userInfo || (userInfo.userID != request.body.lenderID && userInfo.userID != request.body.borrowerID)){
 		authenticated = false
 	}
 	global.pool.query("SELECT * FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){

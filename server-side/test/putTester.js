@@ -95,7 +95,7 @@ var endpoints = [{
 	},
 	goodQuery: {
 		chore: 'Leave the apartment forever and never come back',
-		duedate: '08-30-2017',
+		duedate: '20170830',
 		complete: false,
 		userID: 2
 	}
@@ -212,7 +212,7 @@ describe('The put endpoints', function(){
 					})
 			})
 			it('Rejects valid requests from users that are not in that group', function(done){
-				endpoint.goodQuery.token = dummyUser.token
+				endpoint.goodQuery.token = lUser.token
 				chai.request(app)
 					.put(endpoint.uri)
 					.send(endpoint.goodQuery)
@@ -223,7 +223,7 @@ describe('The put endpoints', function(){
 					})
 			})
 			it ('Accepts valid requests', function(done){
-				endpoint.goodQuery.token = lUser.token
+				endpoint.goodQuery.token = dummyUser.token
 				chai.request(app)
 					.put(endpoint.uri)
 					.send(endpoint.goodQuery)

@@ -103,7 +103,7 @@ var endpoints = [{
 	},
 	goodQuery: {
 		chore: 'Clean the goddamn sink',
-		due_date: '02-02-2020', // may break things; what formats can mysql accept dates in? need to input fuzz this
+		due_date: '20200202', // may break things; what formats can mysql accept dates in? need to input fuzz this
 		userID: 5
 	},
 },
