@@ -15,7 +15,7 @@ exports.get_group_info = function(request, response) {
 	var skeleton = "SELECT group_name, id FROM groups WHERE id=?;"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
-	if (!userInfo || userInfo.groupID != request.body.groupId){
+	if (!userInfo || userInfo.groupID != request.params.groupId){
 		authenticated = false
 	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, {}, function (data, err, task, request, response) {
@@ -54,14 +54,16 @@ exports.get_user_info = function(request, response) {
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo){
-		authenticated = false
+		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
 	}
-	global.pool.query("SELECT group_id from user_accounts WHERE email=?", [userInfo.email], function(err, task) {
-		if (task[0].group_id != userInfo.groupID && request.params.userId != userInfo.userID){
-			authenticated = false
-		}
-		common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
-	})
+	else {
+		global.pool.query("SELECT group_id from user_accounts WHERE email=?", [userInfo.email], function(err, task) {
+			if (task[0].group_id != userInfo.groupID && request.params.userId != userInfo.userID){
+				authenticated = false
+			}
+			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
+		})
+	}
 };
 
 exports.get_group_debt_list = function(request, response) {

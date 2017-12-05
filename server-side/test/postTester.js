@@ -192,7 +192,7 @@ describe('The post endpoints', function(){
 					.post(endpoint.uri)
 					.end((err, res) => {
 						retcode = res.status
-						expect(res.status).to.equal(400)
+						expect(res.status).to.equal(401)
 						done()
 					})
 			})
