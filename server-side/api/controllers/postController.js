@@ -11,39 +11,41 @@ exports.create_new_group = function(request, response){
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo){
-		authenticated = false
+		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
 	}
-	global.pool.query("SELECT group_id FROM user_accounts WHERE id=?", [userInfo.userID], function(err, task){
-		if (task.length !== 0){
-			response.status(409).send({url: request.originalUrl + " received a request to create a group, but is already in a group"})
-		}
-		else {
-			common.perform_query(attributes, placeholders, skeleton, authenticated, null, function (data, err, task, request, response){
-				if (err){
-					response.status(500).send(err);
-				}
-				else {
-					common.perform_query(["groupName"], ["groupName"], "SELECT id FROM groups WHERE group_name=?;", true, null, function (data, err, task, request, response) {
-						if (err){
-							response.status(500).send(err);
-						}
-						else {
-							global.pool.query("UPDATE user_accounts SET group_id=? WHERE email=?", [task[0].id, userInfo.email], function (err, task){
-								if (err){
-									if (!response.headersSent){
-										response.status(500).send(err);
-									}
-								}
-							})
-							if (!response.headersSent){
-								response.json(task)
+	else {
+		global.pool.query("SELECT group_id FROM user_accounts WHERE id=?", [userInfo.userID], function(err, task){
+			if (task.length !== 0){
+				response.status(409).send({url: request.originalUrl + " received a request to create a group, but is already in a group"})
+			}
+			else {
+				common.perform_query(attributes, placeholders, skeleton, authenticated, null, function (data, err, task, request, response){
+					if (err){
+						response.status(500).send(err);
+					}
+					else {
+						common.perform_query(["groupName"], ["groupName"], "SELECT id FROM groups WHERE group_name=?;", true, null, function (data, err, task, request, response) {
+							if (err){
+								response.status(500).send(err);
 							}
-						}
-					}, request, response)
-				}
-			}, request, response)
-		}
-	})
+							else {
+								global.pool.query("UPDATE user_accounts SET group_id=? WHERE email=?", [task[0].id, userInfo.email], function (err, task){
+									if (err){
+										if (!response.headersSent){
+											response.status(500).send(err);
+										}
+									}
+								})
+								if (!response.headersSent){
+									response.json(task)
+								}
+							}
+						}, request, response)
+					}
+				}, request, response)
+			}
+		})
+	}
 };
 
 exports.create_new_user = function(request, response) {

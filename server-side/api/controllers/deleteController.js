@@ -25,7 +25,7 @@ exports.delete_user = function(request, response) {
 	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
 		for (let cachedLogin of global.loginCache) {
-			if (cachedLogin.email === email){
+			if (cachedLogin.email === userInfo.email){
 				global.loginCache.splice(global.loginCache.indexOf(cachedLogin), 1) // log out user from everywhere since their account has been deleted
 			}
 		}
@@ -67,12 +67,12 @@ exports.delete_personal_debt = function(request, response) {
 	if (!userInfo){
 		authenticated = false
 	}
-	global.pool.query("SELECT group_id FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
+	global.pool.query("SELECT lender_id, borrower_id FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
 		if (authenticated) {
-			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+			if ((task[0].lender_id != request.params.userId || task[0].lender_id != userInfo.userID || request.params.userId != userInfo.userID) && (task[0].borrower_id != request.params.userId || task[0].borrower_id != userInfo.userID || request.params.userId != userInfo.userID)) {
 				authenticated = false
 			}
 		}
