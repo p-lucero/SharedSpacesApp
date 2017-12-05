@@ -197,7 +197,12 @@ describe('The post endpoints', function(){
 					})
 			})
 			it('Rejects requests that only have some valid parameters', function(done){
-				endpoint.badQuery.token = lUser.token
+				if (endpoint.uri.endsWith('2')){
+					endpoint.badQuery.token = dummyUser.token
+				}
+				else {
+					endpoint.badQuery.token = lUser.token
+				}
 				chai.request(app)
 					.post(endpoint.uri)
 					.send(endpoint.badQuery)
