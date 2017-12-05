@@ -113,8 +113,10 @@ exports.get_personal_debt_info = function(request, response) {
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
@@ -147,8 +149,10 @@ exports.get_grocery_item = function(request, response) {
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)
@@ -181,8 +185,10 @@ exports.get_chore_info = function(request, response) {
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, null, request, response)

@@ -112,8 +112,10 @@ exports.update_group_debt = function(request, response) {
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
@@ -153,8 +155,10 @@ exports.update_grocery_item = function(request, response) {
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
@@ -175,8 +179,10 @@ exports.update_chore_item = function(request, response) {
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
@@ -197,8 +203,10 @@ exports.update_rent_info = function(request, response) {
 		if (task.length === 0){
 			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
 		else {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
