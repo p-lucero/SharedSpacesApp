@@ -177,7 +177,7 @@ exports.get_chores_list = function(request, response) {
 exports.get_chore_info = function(request, response) {
 	var attributes = []
 	var placeholders = ["choreId"]
-	var skeleton = "SELECT * FROM chores WHERE chore_id=?;"
+	var skeleton = "SELECT * FROM chores WHERE id=?;"
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo || request.params.groupId != userInfo.groupID){

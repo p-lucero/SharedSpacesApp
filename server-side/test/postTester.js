@@ -197,7 +197,7 @@ describe('The post endpoints', function(){
 					})
 			})
 			it('Rejects requests that only have some valid parameters', function(done){
-				endpoint.badQuery.token = dummyUser.token
+				endpoint.badQuery.token = lUser.token
 				chai.request(app)
 					.post(endpoint.uri)
 					.send(endpoint.badQuery)
@@ -224,7 +224,7 @@ describe('The post endpoints', function(){
 					endpoint.goodQuery.token = dummyUser.token
 					chai.request(app)
 						.post(endpoint.uri)
-						.send(endpoint.alreadyInGroupQuery)
+						.send(endpoint.goodQuery)
 						.end((err, res) => {
 							retcode = res.status
 							expect(res.status).to.equal(409)
