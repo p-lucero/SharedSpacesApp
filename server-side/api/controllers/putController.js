@@ -17,7 +17,7 @@ exports.update_group_info = function(request, response) {
 	var attributes = ["groupName", "groundRules", "users"]
 	var placeholders = ["groupName", "groundRules", "groupId"]
 	var skeleton = "UPDATE groups SET group_name=?, ground_rules=? WHERE id=?"
-	var userInfo = common.get_info_from_token(token)
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo || userInfo.groupID != request.params.groupId){
 		authenticated = false
@@ -91,7 +91,7 @@ exports.update_user_info = function(request, response) {
 	var attributes = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID"]
 	var placeholders = ["first", "last", "email", "password", "phoneNumber", "facebook", "twitter", "instagram", "groupID", "userId"]
 	var skeleton = "UPDATE user_accounts SET first_name=?, last_name=?, email=?, password=?, phone_number=?, facebook_profile=?, twitter_handle=?, instagram=?, group_id=? WHERE id=?;"
-	var userInfo = common.get_info_from_token(token)
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo || userInfo.userID != request.params.userId){
 		authenticated = false
@@ -103,7 +103,7 @@ exports.update_group_debt = function(request, response) {
 	var attributes = ["debtType", "amount"]
 	var placeholders = ["debtType", "amount", "groupId", "debtId"]
 	var skeleton = "UPDATE group_debt SET debt_type=?, amount=?, group_id=? WHERE id=?;"
-	var userInfo = common.get_info_from_token(token)
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo){
 		authenticated = false
@@ -127,7 +127,7 @@ exports.update_personal_debt = function(request, response) {
 	var attributes = ["amount", "lenderID", "borrowerID"]
 	var placeholders = ["amount", "lenderID", "borrowerID", "debtId"]
 	var skeleton = "UPDATE personal_debts SET amount=?, lender_id=?, borrower_id=? where id=?;"
-	var userInfo = common.get_info_from_token(token)
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo || (userInfo.userID != request.params.lenderID && userInfo.userID != request.params.borrowerID)){
 		authenticated = false
@@ -146,7 +146,7 @@ exports.update_grocery_item = function(request, response) {
 	var attributes = ["amount", "paid", "userID"]
 	var placeholders = ["amount", "paid", "userID", "groupId", "groceryId"]
 	var skeleton = "UPDATE groceries SET amount_due=?, paid_status=?, user_id=?, group_id=? WHERE id=?;"
-	var userInfo = common.get_info_from_token(token)
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo){
 		authenticated = false
@@ -170,7 +170,7 @@ exports.update_chore_item = function(request, response) {
 	var attributes = ["chore", "duedate", "complete", "userID"]
 	var placeholders = ["chore", "duedate", "complete", "userID", "groupId", "choreId"]
 	var skeleton = "UPDATE chores SET chore=?, due_date=?, chore_complete=?, user_id=?, group_id=? WHERE id=?;"
-	var userInfo = common.get_info_from_token(token)
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo){
 		authenticated = false
@@ -194,7 +194,7 @@ exports.update_rent_info = function(request, response) {
 	var attributes = ["amount", "paid", "userID"]
 	var placeholders = ["amount", "paid", "userID", "groupId"]
 	var skeleton = "UPDATE rent SET rent_amount=?, rent_paid=?, user_id=? WHERE group_id=?;"
-	var userInfo = common.get_info_from_token(token)
+	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo || userInfo.groupID != request.params.groupId){
 		authenticated = false
