@@ -183,7 +183,7 @@ describe('The put endpoints', function(){
 		describe(endpoint.name, function(){
 			it('Rejects content-free requests', function(done){
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.end((err, res) => {
 						retcode = res.status
 						expect(res.status).to.equal(401)
@@ -193,7 +193,7 @@ describe('The put endpoints', function(){
 			it('Rejects requests that only have some valid parameters', function(done){
 				endpoint.badQuery.token = dummyUser.token
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.send(endpoint.badQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -203,7 +203,7 @@ describe('The put endpoints', function(){
 			})
 			it('Rejects valid requests from users that are not logged in', function(done){
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -214,7 +214,7 @@ describe('The put endpoints', function(){
 			it('Rejects valid requests from users that are not in that group', function(done){
 				endpoint.goodQuery.token = dummyUser.token
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -225,7 +225,7 @@ describe('The put endpoints', function(){
 			it ('Accepts valid requests', function(done){
 				endpoint.goodQuery.token = lUser.token
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status
