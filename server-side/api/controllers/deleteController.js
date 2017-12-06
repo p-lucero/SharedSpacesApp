@@ -25,7 +25,7 @@ exports.delete_user = function(request, response) {
 	}
 	common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
 		for (let cachedLogin of global.loginCache) {
-			if (cachedLogin.email === email){
+			if (cachedLogin.email === userInfo.email){
 				global.loginCache.splice(global.loginCache.indexOf(cachedLogin), 1) // log out user from everywhere since their account has been deleted
 			}
 		}
@@ -45,12 +45,14 @@ exports.delete_group_debt = function(request, response) {
 	}
 	global.pool.query("SELECT group_id FROM group_debt WHERE id=?", [request.params.debtId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 		}
 	})
@@ -65,14 +67,16 @@ exports.delete_personal_debt = function(request, response) {
 	if (!userInfo){
 		authenticated = false
 	}
-	global.pool.query("SELECT group_id FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
+	global.pool.query("SELECT lender_id, borrower_id FROM personal_debts WHERE id=?", [request.params.debtId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if ((task[0].lender_id != request.params.userId || task[0].lender_id != userInfo.userID || request.params.userId != userInfo.userID) && (task[0].borrower_id != request.params.userId || task[0].borrower_id != userInfo.userID || request.params.userId != userInfo.userID)) {
+				authenticated = false
+			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 		}
 	})
@@ -101,12 +105,14 @@ exports.delete_grocery_item = function(request, response) {
 	}
 	global.pool.query("SELECT group_id FROM groceries WHERE id=?", [request.params.groceryId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 		}
 	})
@@ -135,12 +141,14 @@ exports.delete_chore_item = function(request, response) {
 	}	
 	global.pool.query("SELECT group_id FROM chores WHERE id=?", [request.params.choreId], function(err, task){
 		if (task.length === 0){
-			request.status(404).send({url: request.originalUrl + " not found"})
+			response.status(404).send({url: request.originalUrl + " not found"})
 		}
-		else if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
-			authenticated = false
+		if (authenticated) {
+			if (task[0].group_id != request.params.groupId || task[0].group_id != userInfo.groupID || request.params.groupId != userInfo.groupID) {
+				authenticated = false
+			}
 		}
-		else {
+		if (task.length !== 0) {
 			common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
 		}
 	})

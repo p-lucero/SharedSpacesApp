@@ -18,8 +18,6 @@ var dbConfig = {
 	user: 'root',
 	insecureAuth: true
 }
-var selectDB = `use ${process.env.DATABASE};`
-var sqlFile = __dirname + '/../testing_db_data.sql'
 
 var endpoints = [{
 	name: 'Get group info',
@@ -58,12 +56,12 @@ var endpoints = [{
 {
 	name: 'Get group debt info',
 	uri: '/api/groupDebts/1/1',
-	requiredAttributes: {
+	requiredAttributes: [
 		// id: 'number',
 		// debt_type: 'string',
 		// amount: 'number',
 		// group_id: 'number'
-	}
+	]
 },
 {
 	name: 'Get personal debt list',
@@ -148,7 +146,7 @@ var lUser = {
 
 describe('The get endpoints', function(){
 	before(function(done){
-		cp.exec('mysql --username=server password=a test < ../testing_db_data.sql', function(a, b, c){
+		cp.exec('mysql --user="server" --password="a" test < testing_db_data.sql', function(a, b, c){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
@@ -161,6 +159,7 @@ describe('The get endpoints', function(){
 					expect(res.body).to.have.property('user_id')
 					dummyUser.token = res.body.token
 					let otherRequest = lUser
+					otherRequest.stayLoggedIn = true
 					chai.request(app)
 						.post('/api/login')
 						.send(otherRequest)

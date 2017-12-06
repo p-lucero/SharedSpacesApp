@@ -85,7 +85,7 @@ var lUser = {
 
 describe('The delete endpoints', function(){
 	before(function(done){ // Refresh the database contents and give our users login tokens before doing any tests.
-		cp.exec('mysql --username=server password=a test < ../testing_db_data.sql', function(a, b, c){
+		cp.exec('mysql --user="server" --password="a" test < testing_db_data.sql', function(a, b, c){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
@@ -98,6 +98,7 @@ describe('The delete endpoints', function(){
 					expect(res.body).to.have.property('user_id')
 					dummyUser.token = res.body.token
 					let otherRequest = lUser
+					otherRequest.stayLoggedIn = true
 					chai.request(app)
 						.post('/api/login')
 						.send(otherRequest)

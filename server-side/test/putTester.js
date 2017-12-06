@@ -95,7 +95,7 @@ var endpoints = [{
 	},
 	goodQuery: {
 		chore: 'Leave the apartment forever and never come back',
-		duedate: '08-30-2017',
+		duedate: '20170830',
 		complete: false,
 		userID: 2
 	}
@@ -145,7 +145,7 @@ var lUser = {
 
 describe('The put endpoints', function(){
 	before(function(done){
-		cp.exec('mysql --username=server password=a test < ../testing_db_data.sql', function(a, b, c){
+		cp.exec('mysql --user="server" --password="a" test < testing_db_data.sql', function(a, b, c){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
@@ -158,6 +158,7 @@ describe('The put endpoints', function(){
 					expect(res.body).to.have.property('user_id')
 					dummyUser.token = res.body.token
 					let otherRequest = lUser
+					otherRequest.stayLoggedIn = true
 					chai.request(app)
 						.post('/api/login')
 						.send(otherRequest)
@@ -182,17 +183,22 @@ describe('The put endpoints', function(){
 		describe(endpoint.name, function(){
 			it('Rejects content-free requests', function(done){
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.end((err, res) => {
 						retcode = res.status
-						expect(res.status).to.equal(400)
+						if (endpoint.name === "Update personal debt"){
+							expect(res.status).to.equal(400)
+						}
+						else {
+							expect(res.status).to.equal(401)
+						}
 						done()
 					})
 			})
 			it('Rejects requests that only have some valid parameters', function(done){
 				endpoint.badQuery.token = dummyUser.token
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.send(endpoint.badQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -202,7 +208,7 @@ describe('The put endpoints', function(){
 			})
 			it('Rejects valid requests from users that are not logged in', function(done){
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -211,9 +217,9 @@ describe('The put endpoints', function(){
 					})
 			})
 			it('Rejects valid requests from users that are not in that group', function(done){
-				endpoint.goodQuery.token = dummyUser.token
+				endpoint.goodQuery.token = lUser.token
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -222,9 +228,9 @@ describe('The put endpoints', function(){
 					})
 			})
 			it ('Accepts valid requests', function(done){
-				endpoint.goodQuery.token = lUser.token
+				endpoint.goodQuery.token = dummyUser.token
 				chai.request(app)
-					.post(endpoint.uri)
+					.put(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status
