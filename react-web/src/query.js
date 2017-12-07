@@ -20,6 +20,8 @@ const PrimaryID = 'PRIMARY';	//All for referencing self id
 const amount = 'amount';		//Group Debts and Personal Debts
 const lender = 'lender_id';		//Group Debts and Personal Debts
 const borrower = 'borrower_id';	//Group Debts and Personal Debts
+const token = 'token';
+var stayLoggedIn = 'stayLoggedIn';
 //Groups
 const groupName = 'group_name';
 const groupRules = 'ground_rules';
@@ -27,8 +29,8 @@ const groupID = 'group_id';
 //User Accounts
 const userID = 'user_id';
 const first = 'first_name';
-const last = 'last_name';
-const email = 'email';
+const last = 'last_name'
+;const email = 'email';
 const password = 'password';
 const phoneNumber = 'phone_number';
 const facebook = 'facebook_profile';
@@ -50,6 +52,8 @@ const rentAmont = 'rent_amount';
 const rentIsPaid = 'rent_paid';
 
 //Locations for api
+const login = 'login';
+const logout = 'logout';
 const group = 'groups';
 const users = 'users';
 const personalDebts = 'personalDebts';
@@ -76,6 +80,9 @@ function request(where, type, ...args){
 		if(error) {return console.log(error);}
 		console.log('post ' + where +  ' status is: ' + response.statusCode);
 		console.log('post ' + where + ' body returned: ' + JSON.stringify(body));
+		if(typeof body != 'string' && userID in body){
+			console.log('Found user ID: ' + body.userID);
+		}
 	});
 }
 
@@ -85,8 +92,15 @@ function ParseArgs(where, type, moreInfo){
 	addArgs = {};								//Initialize the additional arguments object
 	suffix = '';								//Initialize the suffix
 	err = 0;
+	addArgs.token = token in moreInfo ? moreInfo[token] : '';
 
 	switch(where) {								//Switch through the table in the server the request is calling upon
+		case login:
+			addArgs.email = email in moreInfo ? moreInfo[email] : parseValError(email, where);
+			addArgs.password = password in moreInfo ? moreInfo[password] : parseValError(password, where);
+			addArgs.stayLoggedIn = stayLoggedIn in moreInfo ? moreInfo[stayLoggedIn] : parseValError(stayLoggedIn, where);
+			break;
+
 		case group:								//If the request is calling on the groups table in the server
 			if(type == post){
 				addArgs.groupName = groupName in moreInfo ? moreInfo[groupName] : '';
@@ -110,13 +124,13 @@ function ParseArgs(where, type, moreInfo){
 				case post: 								//If the request is of type POST then set all of the relavent user info. Requred information is labeled
 					addArgs.first = first in moreInfo ? moreInfo[first] : parseValError(first, where);				//First name is required
 					addArgs.last = last in moreInfo ? moreInfo[last] : parseValError(last, where);					//Last name is required
-					addArgs.email =  first in moreInfo ? moreInfo[email] : addArgs.email = '';
+					addArgs.email =  email in moreInfo ? moreInfo[email] : parseValError(email, where);
 					addArgs.password =  password in moreInfo ? moreInfo[password] : parseValError(password, where);	//password is required
-					addArgs.phoneNumber = phoneNumber in moreInfo ? moreInfo[phoneNumber] : addArgs.email = 0;
-					addArgs.facebook = facebook in moreInfo ? moreInfo[facebook] : addArgs.facebook = '';
-					addArgs.twitter = twitter in moreInfo ? moreInfo[twitter] : addArgs.twitter = '';
-					addArgs.instagram = instagram in moreInfo ? moreInfo[instagram] : addArgs.instagram = '';
-					addArgs.groupID =  groupID in moreInfo ? moreInfo[groupID] : addArgs.groupID = -1;
+					addArgs.phoneNumber = phoneNumber in moreInfo ? moreInfo[phoneNumber] : parseValError(phoneNumber, where);
+					addArgs.facebook = moreInfo[facebook];
+					addArgs.twitter = moreInfo[twitter];
+					addArgs.instagram = moreInfo[instagram];
+					addArgs.groupID = moreInfo[groupID];
 					break;
 				case get: 								//GET and DELETE have the same suffix and additional argument requirements
 					//Intentional fallthrough
@@ -249,15 +263,20 @@ var dummyUser = {
 
 //A second dummy user to test the new user request
 var newUser = {
-	user_id: 18,
+	user_id: 1020,
 	first_name: 'Dann',
 	last_name: 'Parache',
-	email: 'dann.parache@gmail.com',
+	email: 'dann.parache@gmail.con',
 	password: 'abc123',
+	token: 'a98ec5b6-edba-4c25-80c9-83771fa42eb9',
+	stayLoggedIn: true,
+	phone_number: 8
 }
 
 //Test requests
 //request(rent, post);
-//request(users, post, newUser);
-//request(users, get, newUser);
+//request(users, post,newUser);
+request(users, get, newUser);
+//request(login, post,newUser);
+//request(logout, post, newUser);
 //request(rent, get, dummyUser);
