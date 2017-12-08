@@ -1,12 +1,13 @@
 'use strict';
 
 function ensure_attributes(body, desiredAttributes) {
+	var attributesEnsured = []
 	for (let attribute of desiredAttributes){
-		if (typeof body[attribute] === "undefined"){
-			return false;
+		if (typeof body[attribute] !== "undefined"){
+			attributesEnsured.push(attribute)
 		}
 	}
-	return body;
+	return attributesEnsured
 }
 
 exports.get_info_from_token = function(token) {
@@ -46,11 +47,12 @@ exports.perform_query = function(attributes, placeholders, skeleton, authenticat
 		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
 	}
 	else {
-		var body = ensure_attributes(request.body, attributes)
-		if (!body){
-			response.status(400).send({url: request.originalUrl + " received a badly formatted request"})
+		var attributesEnsured = ensure_attributes(request.body, attributes)
+		if (attributesEnsured.length !== attributes.length){
+			response.status(400).send({url: request.originalUrl + " received a badly formatted request; expected parameters " + JSON.stringify(attributes) + " but only received " + JSON.stringify(attributesEnsured)})
 		}
 		else {
+			var body = request.body
 			for (let param in request.params) { // move anything that was specified in the URL to the request body
 				body[param] = request.params[param]
 			}
