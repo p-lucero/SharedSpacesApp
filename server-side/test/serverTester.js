@@ -44,7 +44,7 @@ describe('The server', function() {
 		done()
 	})
 	it('404s on garbage URLs', function(done){
-		chai.request(server)
+		chai.request(server.app)
 			.post('/api/garbage')
 			.end((err, res) => {
 				expect(res.status).to.equal(404);

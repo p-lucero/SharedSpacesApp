@@ -62,11 +62,11 @@ exports.login = function(request, response){
 
 exports.logout = function(request, response){
 	var userInfo = common.get_info_from_token(request.body.token)
-	var email = userInfo.email
-	if (typeof token === "undefined" || !userInfo){
+	if (typeof request.body.token === "undefined" || !userInfo){
 		response.status(400).send({url: request.originalUrl + " received a badly formatted request"}) // validate parameters
 	}
 	else {
+		var email = userInfo.email
 		let idx = userInfo.loginTokens.indexOf(request.body.token)
 		if (idx > -1){
 			userInfo.loginTokens.splice(idx, 1)

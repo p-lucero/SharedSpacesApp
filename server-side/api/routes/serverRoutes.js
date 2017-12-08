@@ -19,6 +19,7 @@ module.exports = function(app) {
 
 	app.route('/api/users')
 		.post(postController.create_new_user)
+		.get(getController.search_users)
 
 	app.route('/api/users/:userId')
 		.get(getController.get_user_info)
