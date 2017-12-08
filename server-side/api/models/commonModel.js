@@ -44,7 +44,7 @@ Parameters are as follows:
 exports.perform_query = function(attributes, placeholders, skeleton, authenticated, data, callback, request, response) {
 	var parameters = []
 	if (!authenticated){
-		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
+		response.status(401).send({url: request.originalUrl + " not allowed for this user or not signed in"})
 	}
 	else {
 		var attributesEnsured = ensure_attributes(request.body, attributes)

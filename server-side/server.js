@@ -13,7 +13,7 @@ global.pool = mysql.createPool({
 	insecureAuth: true
 });
 
-global.loginCache = []
+global.loginCache = [{email:'', loginTokens:[], groupID:-2147483647, userID:-2147483647}]
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

@@ -54,7 +54,7 @@ exports.get_user_info = function(request, response) {
 	var userInfo = common.get_info_from_token(request.body.token)
 	var authenticated = true
 	if (!userInfo || userInfo.userID != request.params.userId){
-		response.status(401).send({url: request.originalUrl + " not allowed for this user, or not signed in"})
+		response.status(401).send({url: request.originalUrl + " not allowed for this user or not signed in"})
 	}
 	else {
 		global.pool.query("SELECT group_id from user_accounts WHERE email=?", [userInfo.email], function(err, task) {
