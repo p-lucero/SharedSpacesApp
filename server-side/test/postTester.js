@@ -24,7 +24,7 @@ var sqlFile = __dirname + '/../testing_db_data.sql'
 var endpoints = [
 {
 	name: 'Create user',
-	uri: '/api/users',
+	uri: '/api/post/users',
 	badQuery: {
 		email:'foo@bar.com',
 		password:'foofoofoo',
@@ -54,7 +54,7 @@ var endpoints = [
 },
 {
 	name: 'Create group debt',
-	uri: '/api/groupDebts/1',
+	uri: '/api/post/groupDebts/1',
 	badQuery: {
 		debtType: 'House burned down'
 	},
@@ -65,7 +65,7 @@ var endpoints = [
 },
 {
 	name: 'Create personal debt',
-	uri: '/api/personalDebts',
+	uri: '/api/post/personalDebts',
 	badQuery: {
 		amount: 999999999
 	},
@@ -77,7 +77,7 @@ var endpoints = [
 },
 {
 	name: 'Create grocery item',
-	uri: '/api/groceries/1',
+	uri: '/api/post/groceries/1',
 	badQuery: {
 		amount: 444444444
 	},
@@ -88,7 +88,7 @@ var endpoints = [
 },
 {
 	name: 'Create chore',
-	uri: '/api/chores/1',
+	uri: '/api/post/chores/1',
 	badQuery: {
 		chore: 'Clean the goddamn sink'
 	},
@@ -100,7 +100,7 @@ var endpoints = [
 },
 {
 	name: 'Create rent',
-	uri: '/api/rent/1',
+	uri: '/api/post/rent/1',
 	badQuery: {
 		amount: 'six billion and two'
 	},
@@ -111,7 +111,7 @@ var endpoints = [
 },
 {
 	name: 'Create group',
-	uri: '/api/groups',
+	uri: '/api/post/groups',
 	badQuery: {
 		'nroupGame': 'groupName'
 	},
@@ -156,7 +156,7 @@ describe('The post endpoints', function(){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
-				.post('/api/login')
+				.post('/api/post/login')
 				.send(request)
 				.end((err, res) => {
 					expect(res.status).to.equal(200);
@@ -167,7 +167,7 @@ describe('The post endpoints', function(){
 					let otherRequest = lUser
 					otherRequest.stayLoggedIn = true
 					chai.request(app)
-						.post('/api/login')
+						.post('/api/post/login')
 						.send(otherRequest)
 						.end((err, res) => {
 							expect(res.status).to.equal(200);

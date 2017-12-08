@@ -9,72 +9,112 @@ module.exports = function(app) {
 	app.route('/api/dummy') // THIS IS A DUMMY ENDPOINT FOR TESTING PURPOSES ONLY. **DO NOT USE ME IN PRODUCTION CODE**
 		.get(getController.dummy_function)
 
-	app.route('/api/groups') // deals with all groups or groups in the making
+	app.route('/api/post/groups') // deals with all groups or groups in the making
 		.post(postController.create_new_group)
 
-	app.route('/api/groups/:groupId')
-		.get(getController.get_group_info)
-		.put(putController.update_group_info)
-		.delete(deleteController.delete_group)
+	app.route('/api/get/groups/:groupId')
+		.post(getController.get_group_info)
 
-	app.route('/api/users')
+	app.route('/api/put/groups/:groupId')
+		.post(putController.update_group_info)
+
+	app.route('/api/delete/groups/:groupId')
+		.post(deleteController.delete_group)
+
+	app.route('/api/post/users')
 		.post(postController.create_new_user)
-		.get(getController.search_users)
 
-	app.route('/api/users/:userId')
-		.get(getController.get_user_info)
-		.put(putController.update_user_info)
-		.delete(deleteController.delete_user)
+	app.route('/api/get/users')
+		.post(getController.search_users)
 
-	app.route('/api/login')
+	app.route('/api/get/users/:userId')
+		.post(getController.get_user_info)
+
+	app.route('/api/put/users/:userId')
+		.post(putController.update_user_info)
+
+	app.route('/api/delete/users/:userId')
+		.post(deleteController.delete_user)
+
+	app.route('/api/post/login')
 		.post(authenticationController.login)
 
-	app.route('/api/logout')
+	app.route('/api/post/logout')
 		.post(authenticationController.logout)
 
-	app.route('/api/groupDebts/:groupId')
-		.get(getController.get_group_debt_list)
+	app.route('/api/get/groupDebts/:groupId')
+		.post(getController.get_group_debt_list)
+
+	app.route('/api/post/groupDebts/:groupId')
 		.post(postController.create_group_debt)
 
-	app.route('/api/groupDebts/:groupId/:debtId')
-		.get(getController.get_group_debt_info)
-		.put(putController.update_group_debt)
-		.delete(deleteController.delete_group_debt)
+	app.route('/api/get/groupDebts/:groupId/:debtId')
+		.post(getController.get_group_debt_info)
 
-	app.route('/api/personalDebts')
+	app.route('/api/put/groupDebts/:groupId/:debtId')
+		.post(putController.update_group_debt)
+
+	app.route('/api/delete/groupDebts/:groupId/:debtId')
+		.post(deleteController.delete_group_debt)
+
+	app.route('/api/post/personalDebts')
 		.post(postController.create_new_personal_debt)
 
-	app.route('/api/personalDebts/:userId')
-		.get(getController.get_personal_debt_list)
+	app.route('/api/get/personalDebts/:userId')
+		.post(getController.get_personal_debt_list)
 
-	app.route('/api/personalDebts/:userId/:debtId')
-		.get(getController.get_personal_debt_info)
-		.put(putController.update_personal_debt)
-		.delete(deleteController.delete_personal_debt)
+	app.route('/api/get/personalDebts/:userId/:debtId')
+		.post(getController.get_personal_debt_info)
 
-	app.route('/api/groceries/:groupId')
-		.get(getController.get_grocery_list)
+	app.route('/api/put/personalDebts/:userId/:debtId')
+		.post(putController.update_personal_debt)
+
+	app.route('/api/delete/personalDebts/:userId/:debtId')
+		.post(deleteController.delete_personal_debt)
+
+	app.route('/api/get/groceries/:groupId')
+		.post(getController.get_grocery_list)
+
+	app.route('/api/post/groceries/:groupId')
 		.post(postController.create_new_grocery_item)
-		.delete(deleteController.delete_grocery_list)
 
-	app.route('/api/groceries/:groupId/:groceryId')
-		.get(getController.get_grocery_item)
-		.put(putController.update_grocery_item)
-		.delete(deleteController.delete_grocery_item)
+	app.route('/api/delete/groceries/:groupId')
+		.post(deleteController.delete_grocery_list)
 
-	app.route('/api/chores/:groupId')
-		.get(getController.get_chores_list)
+	app.route('/api/get/groceries/:groupId/:groceryId')
+		.post(getController.get_grocery_item)
+
+	app.route('/api/put/groceries/:groupId/:groceryId')
+		.post(putController.update_grocery_item)
+
+	app.route('/api/delete/groceries/:groupId/:groceryId')
+		.post(deleteController.delete_grocery_item)
+
+	app.route('/api/get/chores/:groupId')
+		.post(getController.get_chores_list)
+
+	app.route('/api/post/chores/:groupId')
 		.post(postController.create_new_chore)
-		.delete(deleteController.delete_chores_list)
 
-	app.route('/api/chores/:groupId/:choreId')
-		.get(getController.get_chore_info)
-		.put(putController.update_chore_item)
-		.delete(deleteController.delete_chore_item)
+	app.route('/api/delete/chores/:groupId')
+		.post(deleteController.delete_chores_list)
 
-	app.route('/api/rent/:groupId')
-		.get(getController.get_rent_info)
-		.put(putController.update_rent_info)
+	app.route('/api/get/chores/:groupId/:choreId')
+		.post(getController.get_chore_info)
+
+	app.route('/api/put/chores/:groupId/:choreId')
+		.post(putController.update_chore_item)
+
+	app.route('/api/delete/chores/:groupId/:choreId')
+		.post(deleteController.delete_chore_item)
+
+	app.route('/api/get/rent/:groupId')
+		.post(getController.get_rent_info)
+
+	app.route('/api/put/rent/:groupId')
+		.post(putController.update_rent_info)
+
+	app.route('/api/post/rent/:groupId')
 		.post(postController.create_new_rent_item)
 
 	// Enumerate all of the routes that should be taken by different requests.

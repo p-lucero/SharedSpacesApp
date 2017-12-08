@@ -23,7 +23,7 @@ var sqlFile = __dirname + '/../testing_db_data.sql'
 
 var endpoints = [{
 	name: 'Update group information',
-	uri: '/api/groups/1',
+	uri: '/api/put/groups/1',
 	badQuery: {
 		groupName: 'Absolutely Not Shared Spaces',
 		groundRules: 'Don\'t be that guy'
@@ -36,7 +36,7 @@ var endpoints = [{
 },
 {
 	name: 'Update user information',
-	uri: '/api/users/1',
+	uri: '/api/put/users/1',
 	badQuery: {
 		first:'foo'
 	},
@@ -54,7 +54,7 @@ var endpoints = [{
 },
 {
 	name: 'Update group debt',
-	uri: '/api/groupDebts/1/1',
+	uri: '/api/put/groupDebts/1/1',
 	badQuery: {
 		debtType: 'Painted the town green'
 	},
@@ -65,7 +65,7 @@ var endpoints = [{
 },
 {
 	name: 'Update personal debt',
-	uri: '/api/personalDebts/1/1',
+	uri: '/api/put/personalDebts/1/1',
 	badQuery: {
 		amount: 2
 	},
@@ -77,7 +77,7 @@ var endpoints = [{
 },
 {
 	name: 'Update grocery item',
-	uri: '/api/groceries/1/1',
+	uri: '/api/put/groceries/1/1',
 	badQuery: {
 		amount: 12
 	},
@@ -89,7 +89,7 @@ var endpoints = [{
 },
 {
 	name: 'Update chore item',
-	uri: '/api/chores/1/1',
+	uri: '/api/put/chores/1/1',
 	badQuery: {
 		complete:false
 	},
@@ -102,7 +102,7 @@ var endpoints = [{
 },
 {
 	name: 'Update rent information',
-	uri: '/api/rent/1',
+	uri: '/api/put/rent/1',
 	badQuery: {
 		amount: 1000000000
 	},
@@ -149,7 +149,7 @@ describe('The put endpoints', function(){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
-				.post('/api/login')
+				.post('/api/post/login')
 				.send(request)
 				.end((err, res) => {
 					expect(res.status).to.equal(200);
@@ -160,7 +160,7 @@ describe('The put endpoints', function(){
 					let otherRequest = lUser
 					otherRequest.stayLoggedIn = true
 					chai.request(app)
-						.post('/api/login')
+						.post('/api/post/login')
 						.send(otherRequest)
 						.end((err, res) => {
 							expect(res.status).to.equal(200);
@@ -183,7 +183,7 @@ describe('The put endpoints', function(){
 		describe(endpoint.name, function(){
 			it('Rejects content-free requests', function(done){
 				chai.request(app)
-					.put(endpoint.uri)
+					.post(endpoint.uri)
 					.end((err, res) => {
 						retcode = res.status
 						if (endpoint.name === "Update personal debt"){
@@ -198,7 +198,7 @@ describe('The put endpoints', function(){
 			it('Rejects requests that only have some valid parameters', function(done){
 				endpoint.badQuery.token = dummyUser.token
 				chai.request(app)
-					.put(endpoint.uri)
+					.post(endpoint.uri)
 					.send(endpoint.badQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -208,7 +208,7 @@ describe('The put endpoints', function(){
 			})
 			it('Rejects valid requests from users that are not logged in', function(done){
 				chai.request(app)
-					.put(endpoint.uri)
+					.post(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -219,7 +219,7 @@ describe('The put endpoints', function(){
 			it('Rejects valid requests from users that are not in that group', function(done){
 				endpoint.goodQuery.token = lUser.token
 				chai.request(app)
-					.put(endpoint.uri)
+					.post(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status
@@ -230,7 +230,7 @@ describe('The put endpoints', function(){
 			it ('Accepts valid requests', function(done){
 				endpoint.goodQuery.token = dummyUser.token
 				chai.request(app)
-					.put(endpoint.uri)
+					.post(endpoint.uri)
 					.send(endpoint.goodQuery)
 					.end((err, res) => {
 						retcode = res.status

@@ -21,7 +21,7 @@ var dbConfig = {
 
 var endpoints = [{
 	name: 'Get group info',
-	uri: '/api/groups/1',
+	uri: '/api/get/groups/1',
 	requiredAttributes: [
 		// group_info: 'object',
 		// users: 'array',
@@ -32,7 +32,7 @@ var endpoints = [{
 },
 {
 	name: 'Get user info',
-	uri: '/api/users/1',
+	uri: '/api/get/users/1',
 	requiredAttributes: [
 		// '0.id': 'number',
 		// '0.first_name': 'string',
@@ -47,7 +47,7 @@ var endpoints = [{
 },
 {
 	name: 'Get group debt list',
-	uri: '/api/groupDebts/1',
+	uri: '/api/get/groupDebts/1',
 	requiredAttributes: [
 		// '0': 'array',
 		// '0'
@@ -55,7 +55,7 @@ var endpoints = [{
 },
 {
 	name: 'Get group debt info',
-	uri: '/api/groupDebts/1/1',
+	uri: '/api/get/groupDebts/1/1',
 	requiredAttributes: [
 		// id: 'number',
 		// debt_type: 'string',
@@ -65,49 +65,49 @@ var endpoints = [{
 },
 {
 	name: 'Get personal debt list',
-	uri: '/api/personalDebts/1',
+	uri: '/api/get/personalDebts/1',
 	requiredAttributes: [
 		// '0': 'array'
 	]
 },
 {
 	name: 'Get personal debt info',
-	uri: '/api/personalDebts/1/1',
+	uri: '/api/get/personalDebts/1/1',
 	requiredAttributes: [
 
 	]
 },
 {
 	name: 'Get grocery list',
-	uri: '/api/groceries/1',
+	uri: '/api/get/groceries/1',
 	requiredAttributes: [
 
 	]
 },
 {
 	name: 'Get grocery item info',
-	uri: '/api/groceries/1/1',
+	uri: '/api/get/groceries/1/1',
 	requiredAttributes: [
 
 	]
 },
 {
 	name: 'Get chores list',
-	uri: '/api/chores/1',
+	uri: '/api/get/chores/1',
 	requiredAttributes: [
 
 	]
 },
 {
 	name: 'Get chores info',
-	uri: '/api/chores/1/1',
+	uri: '/api/get/chores/1/1',
 	requiredAttributes: [
 
 	]
 },
 {
 	name: 'Get rent info',
-	uri: '/api/rent/1',
+	uri: '/api/get/rent/1',
 	requiredAttributes: [
 
 	]
@@ -150,7 +150,7 @@ describe('The get endpoints', function(){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
-				.post('/api/login')
+				.post('/api/post/login')
 				.send(request)
 				.end((err, res) => {
 					expect(res.status).to.equal(200);
@@ -161,7 +161,7 @@ describe('The get endpoints', function(){
 					let otherRequest = lUser
 					otherRequest.stayLoggedIn = true
 					chai.request(app)
-						.post('/api/login')
+						.post('/api/post/login')
 						.send(otherRequest)
 						.end((err, res) => {
 							expect(res.status).to.equal(200);
@@ -184,7 +184,7 @@ describe('The get endpoints', function(){
 		describe(endpoint.name, function(){
 			it('Rejects empty requests', function(done){
 				chai.request(app)
-					.get(endpoint.uri)
+					.post(endpoint.uri)
 					.end((err, res) => {
 						retcode = res.status
 						expect(res.status).to.equal(401)
@@ -193,7 +193,7 @@ describe('The get endpoints', function(){
 			})
 			it('Forbids a user from getting things they are unrelated to', function(done){
 				chai.request(app)
-					.get(endpoint.uri)
+					.post(endpoint.uri)
 					.send(lUser)
 					.end((err, res) => {
 						retcode = res.status
@@ -203,7 +203,7 @@ describe('The get endpoints', function(){
 			})
 			it('Allows an authorized user to perform gets and returns good data', function(done){
 				chai.request(app)
-					.get(endpoint.uri)
+					.post(endpoint.uri)
 					.send(dummyUser)
 					.end((err, res) => {
 						retcode = res.status

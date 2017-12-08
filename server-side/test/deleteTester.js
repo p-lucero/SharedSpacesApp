@@ -23,35 +23,35 @@ var sqlFile = __dirname + '/../testing_db_data.sql'
 
 var endpoints = [{
 	name: 'Delete group debt',
-	uri: '/api/groupDebts/1/1'
+	uri: '/api/delete/groupDebts/1/1'
 },
 {
 	name: 'Delete personal debt',
-	uri: '/api/personalDebts/1/1'
+	uri: '/api/delete/personalDebts/1/1'
 },
 {
 	name: 'Delete grocery item',
-	uri: '/api/groceries/1/1'
+	uri: '/api/delete/groceries/1/1'
 },
 {
 	name: 'Delete grocery list',
-	uri: '/api/groceries/1'
+	uri: '/api/delete/groceries/1'
 },
 {
 	name: 'Delete chore item',
-	uri: '/api/chores/1/1'
+	uri: '/api/delete/chores/1/1'
 },
 {
 	name: 'Delete chores list',
-	uri: '/api/chores/1',
+	uri: '/api/delete/chores/1',
 },
 {
 	name: 'Delete group', 
-	uri: '/api/groups/1'
+	uri: '/api/delete/groups/1'
 },
 {
 	name: 'Delete user',
-	uri: '/api/users/1'
+	uri: '/api/delete/users/1'
 }]
 
 // http://chaijs.com/api/bdd/ contains the documentation for how things work here
@@ -89,7 +89,7 @@ describe('The delete endpoints', function(){
 			let request = dummyUser
 			request.stayLoggedIn = true
 			chai.request(app)
-				.post('/api/login')
+				.post('/api/post/login')
 				.send(request)
 				.end((err, res) => {
 					expect(res.status).to.equal(200);
@@ -100,7 +100,7 @@ describe('The delete endpoints', function(){
 					let otherRequest = lUser
 					otherRequest.stayLoggedIn = true
 					chai.request(app)
-						.post('/api/login')
+						.post('/api/post/login')
 						.send(otherRequest)
 						.end((err, res) => {
 							expect(res.status).to.equal(200);
@@ -123,7 +123,7 @@ describe('The delete endpoints', function(){
 		describe(endpoint.name, function(){
 		it('Rejects empty requests', function(done){
 			chai.request(app)
-				.delete(endpoint.uri)
+				.post(endpoint.uri)
 				.end((err, res) => {
 					retcode = res.status
 					expect(res.status).to.equal(401)
@@ -132,7 +132,7 @@ describe('The delete endpoints', function(){
 		})
 		it('Forbids a user from deleting things that they are unrelated to', function(done){
 			chai.request(app)
-				.delete(endpoint.uri)
+				.post(endpoint.uri)
 				.send(lUser)
 				.end((err, res) => {
 					retcode = res.status
@@ -142,7 +142,7 @@ describe('The delete endpoints', function(){
 		})
 		it('Allows an authorized user to perform deletes', function(done){
 			chai.request(app)
-				.delete(endpoint.uri)
+				.post(endpoint.uri)
 				.send(dummyUser)
 				.end((err, res) => {
 					retcode = res.status
