@@ -28,6 +28,26 @@
             android:label="SharedSpaces" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".GroceryList"></activity>
+
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".AddReminderActivity"
+            android:label="@string/title_activity_add_reminder"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"
+                />
+        </activity>
+        <provider
+            android:name=".data.AlarmReminderProvider"
+            android:authorities="com.sharedspaces.sharedspaces"
+            android:exported="false" />
+
+        <service
+            android:name=".reminder.ReminderAlarmService"
+            android:exported="false" />
     </application>
 
 </manifest>

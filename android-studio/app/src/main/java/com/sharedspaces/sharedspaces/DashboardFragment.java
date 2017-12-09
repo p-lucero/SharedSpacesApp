@@ -20,8 +20,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
 
         View v = inflater.inflate(R.layout.dashboard_fragment, container, false);
 
-        Button b = (Button) v.findViewById(R.id.button2);
-        b.setOnClickListener(this);
+        Button b1 = (Button) v.findViewById(R.id.button1);
+        Button b2 = (Button) v.findViewById(R.id.button2);
+        b1.setOnClickListener(this);
+        b2.setOnClickListener(this);
         return v;
 
     }
@@ -29,6 +31,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+
+                case R.id.button1:
+
+                    Intent i = new Intent(getActivity(),MainActivity.class);
+                    startActivity(i);
+
+                    break;
+
                 case R.id.button2:
 
                     Intent intent = new Intent(getActivity(),GroceryList.class);
@@ -48,6 +58,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
 
             }
         });*/
+
+
 
     }
 
