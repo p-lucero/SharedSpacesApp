@@ -27,7 +27,7 @@ import com.sharedspaces.sharedspaces.data.AlarmReminderDbHelper;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private FloatingActionButton mAddReminderButton;
-    private Toolbar mToolbar;
+    //private Toolbar mToolbar;
     AlarmCursorAdapter mCursorAdapter;
     AlarmReminderDbHelper alarmReminderDbHelper = new AlarmReminderDbHelper(this);
     ListView reminderListView;
@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        /*mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(R.string.app_name);
+        mToolbar.setTitle(R.string.app_name);*/
 
 
         reminderListView = (ListView) findViewById(R.id.list);

@@ -27,9 +27,9 @@
             android:name=".HomeActivity"
             android:label="SharedSpaces" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".GroceryList"></activity>
+        <activity android:name=".GroceryList" />
 
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".AddReminderActivity"
             android:label="@string/title_activity_add_reminder"
             android:parentActivityName=".MainActivity"

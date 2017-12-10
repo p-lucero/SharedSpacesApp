@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:gravity="center"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
         android:gravity="center"
-        android:text="@string/title_dashboard"/>
+        android:text="@string/title_dashboard" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="177dp"
         android:layout_height="53dp"
-        android:layout_marginTop="24dp"
-        android:text="CALENDAR" />
+        android:layout_alignLeft="@+id/button2"
+        android:layout_alignStart="@+id/button2"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="15dp"
+        android:text="REMINDER" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="177dp"
         android:layout_height="53dp"
-        android:layout_marginTop="24dp"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp"
         android:text="GROCERY" />
 
-</LinearLayout>
+</RelativeLayout>

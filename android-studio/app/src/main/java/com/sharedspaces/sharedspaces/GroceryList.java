@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,11 +22,17 @@ public class GroceryList extends AppCompatActivity {
     ListHelper ListHelper;
     ArrayAdapter<String> mAdapter;
     ListView lstTask;
+    //private Toolbar mToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_list);
         ListHelper = new ListHelper(this);
+
+        /*mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitle(R.string.app_name);*/
+
         lstTask = (ListView)findViewById(R.id.lstTask);
         loadTaskList();
     }

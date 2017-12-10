@@ -46,7 +46,7 @@ public class AddReminderActivity extends AppCompatActivity implements
     private static final int EXISTING_VEHICLE_LOADER = 0;
 
 
-    private Toolbar mToolbar;
+    //private Toolbar mToolbar;
     private EditText mTitleText;
     private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
     private FloatingActionButton mFAB1;
@@ -116,7 +116,7 @@ public class AddReminderActivity extends AppCompatActivity implements
 
 
         // Initialize Views
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        //mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTitleText = (EditText) findViewById(R.id.reminder_title);
         mDateText = (TextView) findViewById(R.id.set_date);
         mTimeText = (TextView) findViewById(R.id.set_time);
@@ -205,10 +205,10 @@ public class AddReminderActivity extends AppCompatActivity implements
             mFAB2.setVisibility(View.VISIBLE);
         }
 
-        setSupportActionBar(mToolbar);
+        /*setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.title_activity_add_reminder);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);*/
 
 
     }
