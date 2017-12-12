@@ -15,8 +15,11 @@
     </string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_dashboard">Dashboard</string>
+    <string name="t_dashboard">DASHBOARD</string>
     <string name="title_messages">Messages</string>
+    <string name="t_messages">MESSAGES</string>
     <string name="title_account">Account</string>
+    <string name="t_account">ACCOUNT</string>
     <string name="action_register">Don\'t have an account? Register!</string>
     <string name="hint_password">Password</string>
     <string name="hint_dob">Date of Birth</string>
