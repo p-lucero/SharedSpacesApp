@@ -24,7 +24,7 @@ exports.return_truefalse = function(data, err, task, request, response) { // Ret
 		response.status(400).send(err)
 	}
 	else {
-		response.json(200) // this is apparently valid expressJS code
+		response.status(200).json({success:"success"}) // this is apparently valid expressJS code
 	}
 }
 

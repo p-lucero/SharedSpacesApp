@@ -1,3 +1,18 @@
+const repl = require('repl')
+const net = require('net')
+let connections = 0
+
+net.createServer((socket) => {
+  connections += 1;
+  repl.start({
+    prompt: 'Node.js via TCP socket> ',
+    input: socket,
+    output: socket
+  }).on('exit', () => {
+    socket.end();
+  });
+}).listen(5001);
+
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 3001, // allow for using the test port

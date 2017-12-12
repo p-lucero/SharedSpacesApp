@@ -14,7 +14,7 @@ exports.login = function(request, response){
 		let alreadyLoggedIn = false;
 		for (let cachedLogin of global.loginCache) { // check if user's already logged in
 			if (cachedLogin.loginTokens.indexOf(request.body.token) > -1) { // will fail anyways if the user has no login token, which is fine
-				response.status(200).send({"success":"login successful", "token":request.body.token});
+				response.status(200).send({"success":"login successful", "token":request.body.token, "user_id":cachedLogin.userID});
 				alreadyLoggedIn = true
 				break
 			}

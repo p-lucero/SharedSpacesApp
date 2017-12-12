@@ -84,7 +84,14 @@ exports.create_group_debt = function(request, response) {
 	if (!userInfo || request.params.groupId != userInfo.groupID){
 		authenticated = false
 	}
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+	common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
+		if (err){
+			response.status(500).send(err);
+		}
+		else {
+			common.perform_query([], [], "SELECT max(id) FROM group_debt;", authenticated, null, null, request, response);
+		}
+	}, request, response)
 };
 
 exports.create_new_personal_debt = function(request, response) {
@@ -100,7 +107,14 @@ exports.create_new_personal_debt = function(request, response) {
 		if (!userInfo || (userInfo.userID != request.body.lender && userInfo.userID != request.body.borrower)){
 			authenticated = false
 		}
-		common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+		common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
+			if (err){
+				response.status(500).send(err);
+			}
+			else {
+				common.perform_query([], [], "SELECT max(id) FROM personal_debts;", authenticated, null, null, request, response);
+			}
+		}, request, response)
 	}
 };
 
@@ -113,7 +127,14 @@ exports.create_new_grocery_item = function(request, response) {
 	if (!userInfo || userInfo.groupID != request.params.groupId){
 		authenticated = false
 	}
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+	common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
+		if (err){
+			response.status(500).send(err);
+		}
+		else {
+			common.perform_query([], [], "SELECT max(id) FROM groceries;", authenticated, null, null, request, response);
+		}
+	}, request, response)
 };
 
 exports.create_new_chore = function(request, response) {
@@ -125,7 +146,14 @@ exports.create_new_chore = function(request, response) {
 	if (!userInfo || userInfo.groupID != request.params.groupId){
 		authenticated = false
 	}
-	common.perform_query(attributes, placeholders, skeleton, authenticated, null, common.return_truefalse, request, response)
+	common.perform_query(attributes, placeholders, skeleton, authenticated, null, function(data, err, task, request, response){
+		if (err){
+			response.status(500).send(err);
+		}
+		else {
+			common.perform_query([], [], "SELECT max(id) FROM chores;", authenticated, null, null, request, response);
+		}
+	}, request, response)
 };
 
 exports.create_new_rent_item = function(request, response) {
