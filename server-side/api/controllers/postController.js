@@ -89,7 +89,7 @@ exports.create_group_debt = function(request, response) {
 			response.status(500).send(err);
 		}
 		else {
-			common.perform_query([], [], "SELECT max(id) FROM group_debt;", authenticated, null, null, request, response);
+			common.perform_query([], [], "SELECT max(id) AS debtID FROM group_debt;", authenticated, null, null, request, response);
 		}
 	}, request, response)
 };
@@ -112,7 +112,7 @@ exports.create_new_personal_debt = function(request, response) {
 				response.status(500).send(err);
 			}
 			else {
-				common.perform_query([], [], "SELECT max(id) FROM personal_debts;", authenticated, null, null, request, response);
+				common.perform_query([], [], "SELECT max(id) AS debtID FROM personal_debts;", authenticated, null, null, request, response);
 			}
 		}, request, response)
 	}
@@ -132,7 +132,7 @@ exports.create_new_grocery_item = function(request, response) {
 			response.status(500).send(err);
 		}
 		else {
-			common.perform_query([], [], "SELECT max(id) FROM groceries;", authenticated, null, null, request, response);
+			common.perform_query([], [], "SELECT max(id) AS groceryID FROM groceries;", authenticated, null, null, request, response);
 		}
 	}, request, response)
 };
@@ -151,7 +151,7 @@ exports.create_new_chore = function(request, response) {
 			response.status(500).send(err);
 		}
 		else {
-			common.perform_query([], [], "SELECT max(id) FROM chores;", authenticated, null, null, request, response);
+			common.perform_query([], [], "SELECT max(id) AS choreID FROM chores;", authenticated, null, null, request, response);
 		}
 	}, request, response)
 };

@@ -14,7 +14,7 @@ exports.login = function(request, response){
 		let alreadyLoggedIn = false;
 		for (let cachedLogin of global.loginCache) { // check if user's already logged in
 			if (cachedLogin.loginTokens.indexOf(request.body.token) > -1) { // will fail anyways if the user has no login token, which is fine
-				response.status(200).send({"success":"login successful", "token":request.body.token, "user_id":cachedLogin.userID});
+				response.status(200).send({"success":"login successful", "token":request.body.token, "userID":cachedLogin.userID});
 				alreadyLoggedIn = true
 				break
 			}
@@ -28,7 +28,7 @@ exports.login = function(request, response){
 					if (task.length > 0){
 						if (task[0].password == password){
 							let token = uuidv4() // generate token
-							response.status(200).send({"success":"login successful", "token":token, "user_id":task[0].id});
+							response.status(200).send({"success":"login successful", "token":token, "userID":task[0].id});
 							var cached = false
 							for (let cachedLogin of global.loginCache) { // if user has no login thingies, create one for them
 								if (cachedLogin.email === email) {
