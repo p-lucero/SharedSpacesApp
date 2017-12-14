@@ -1,5 +1,5 @@
 package com.sharedspaces.sharedspaces;
-
+import com.sharedspaces.sharedspaces.GroupMember;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
+import java.lang.Object;
+import android.util.Log;
 
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -79,7 +82,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    try {
+                        attemptLogin();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     return true;
                 }
                 return false;
@@ -90,7 +99,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                try {
+                    attemptLogin();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -162,10 +177,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptLogin() throws ExecutionException, InterruptedException {
         if (mAuthTask != null) {
+            System.out.println("mauthtask != null");
+            System.out.println("mauthtask != null");
+            GroupMember newUser = new GroupMember();
+            System.out.println("Created New User");
+            String emailA = mEmailView.getText().toString();
+            String passwordA = mPasswordView.getText().toString();
+            String token = null;
+//        System.out.println("emai, password, and token are initialized");
+            token = newUser.PLogin(emailA, passwordA);
+            System.out.print(token);
             return;
         }
+
+//        System.out.println("mauthtask == null");
+        Log.v("test1", "mauthtask == null");
+        GroupMember newUser = new GroupMember();
+        System.out.println("Created new user ==");
+//        System.out.println("Created New User");
+        Log.v("test2","mauthtask == m");
+        Log.v("test3","mauthtask == didly");
+        Log.v("the diddle","didly == m");
+        String emailA = mEmailView.getText().toString();
+        String passwordA = mPasswordView.getText().toString();
+        String token = null;
+//        System.out.println("emai, password, and token are initialized");
+//        token = newUser.testCase();
+        token = newUser.PLogin(emailA, passwordA);
+        Log.v("its ya boi token",token);
+
+//        System.out.println("mauth == null");
 
         // Reset errors.
         mEmailView.setError(null);
@@ -219,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace with better logic
-        return password.length() > 4;
+        return password.length() > 0;
     }
 
     /**

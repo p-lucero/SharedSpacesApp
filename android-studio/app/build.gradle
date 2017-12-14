@@ -36,4 +36,5 @@ dependencies {
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     testCompile 'junit:junit:4.12'
+    compile 'commons-io:commons-io:+'
 }
