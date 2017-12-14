@@ -4,7 +4,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in">Login</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -47,7 +47,7 @@
     <string name="action_discard_reminder">Discard Reminder</string>
     <string name="action_save_reminder">Save Reminder</string>
 
-    <string name="editor_activity_title_new_reminder">Shared Spaces</string>
+    <string name="editor_activity_title_new_reminder">SharedSpaces</string>
     <string name="editor_activity_title_edit_reminder">Edit Reminder</string>
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
     <string name="discard">Discard</string>

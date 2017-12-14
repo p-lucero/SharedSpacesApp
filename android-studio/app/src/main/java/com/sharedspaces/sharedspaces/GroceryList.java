@@ -28,11 +28,6 @@ public class GroceryList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_list);
         ListHelper = new ListHelper(this);
-
-        /*mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        mToolbar.setTitle(R.string.app_name);*/
-
         lstTask = (ListView)findViewById(R.id.lstTask);
         loadTaskList();
     }
