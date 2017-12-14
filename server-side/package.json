@@ -1,0 +1,28 @@
+{
+  "name": "sharedspacesserver",
+  "version": "0.0.1",
+  "description": "Server-side logic for the Shared Spaces app",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha",
+    "start": "pm2 start 3"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "child_process": "^1.0.2",
+    "execsql": "0.0.3",
+    "express": "^4.16.2",
+    "mocha": "^4.0.1",
+    "request": "^2.83.0",
+    "sinon": "^4.1.2",
+    "uuid": "^3.1.0",
+    "validator": "^9.1.2"
+  }
+}
