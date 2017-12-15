@@ -42,6 +42,16 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".MainActivity" />
+        <provider
+            android:name=".data.AlarmReminderProvider"
+            android:authorities="com.sharedspaces.sharedspaces"
+            android:exported="false" />
+
+        <service
+            android:name=".reminder.ReminderAlarmService"
+            android:exported="false"/>
+
+        <activity android:name=".ChoreActivity"></activity>
     </application>
 
 </manifest>
